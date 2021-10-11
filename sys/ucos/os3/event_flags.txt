@@ -1,0 +1,54 @@
+
+include <Source/os.h>
+
+OSFlagCreate(p_grp ptr[inout, OS_FLAG_GRP], p_name ptr[in, CPU_CHAR], flags OS_FLAGS, p_err ptr[inout, flags[cret_err_type]])
+OSFlagDel(p_grp ptr[in, OS_FLAG_GRP], opt flags[del_opt_flags, int16], p_err ptr[inout, flags[del_err_type]]) OS_OBJ_QTY
+OSFlagPend(p_grp ptr[inout, OS_FLAG_GRP], flags OS_FLAGS, timeout OS_TICK, opt flags[pend_opt_flags, int16], p_ts ptr[inout, CPU_TS], p_err ptr[inout, flags[pend_err_type]]) OS_FLAGS
+OSFlagPendAbort(p_grp ptr[inout, OS_FLAG_GRP], opt flags[abort_opt_flags, int16], p_err ptr[inout, flags[abort_err_type]]) OS_OBJ_QTY
+OSFlagPendGetFlagsRdy(p_err ptr[inout, flags[getready_err_type]]) OS_FLAGS
+OSFlagPost(p_grp ptr[inout, OS_FLAG_GRP], flags OS_FLAGS, opt flags[post_opt_flags, int16], p_err ptr[inout, flags[post_err_type]]) OS_FLAGS
+
+
+type CPU_CHAR   char
+type CPU_TS     int32
+type OS_TICK    int32
+type OS_FLAGS   int32
+type OS_OBJ_QTY int16
+type OS_OBJ_TYPE int32[opt]
+
+del_opt_flags = OS_OPT_DEL_NO_PEND, OS_OPT_DEL_ALWAYS
+pend_opt_flags = OS_OPT_PEND_FLAG_CLR_ALL, OS_OPT_PEND_FLAG_CLR_ANY, OS_OPT_PEND_FLAG_SET_ALL, OS_OPT_PEND_FLAG_SET_ANY, OS_OPT_PEND_FLAG_CONSUME, OS_OPT_PEND_BLOCKING, OS_OPT_PEND_NON_BLOCKING
+abort_opt_flags = OS_OPT_PEND_ABORT_1, OS_OPT_PEND_ABORT_ALL, OS_OPT_POST_NO_SCHED
+post_opt_flags = OS_OPT_POST_FLAG_SET, OS_OPT_POST_FLAG_CLR, OS_OPT_POST_NO_SCHED
+
+cret_err_type = OS_ERR_NONE, OS_ERR_CREATE_ISR, OS_ERR_ILLEGAL_CREATE_RUN_TIME, OS_ERR_OBJ_PTR_NULL
+del_err_type = OS_ERR_NONE, OS_ERR_DEL_ISR, OS_ERR_ILLEGAL_DEL_RUN_TIME, OS_ERR_OBJ_PTR_NULL, OS_ERR_OBJ_TYPE, OS_ERR_OPT_INVALID, OS_ERR_OS_NOT_RUNNING, OS_ERR_TASK_WAITING
+pend_err_type = OS_ERR_NONE, OS_ERR_OBJ_DEL, OS_ERR_OBJ_PTR_NULL, OS_ERR_OBJ_TYPE, OS_ERR_OPT_INVALID, OS_ERR_OS_NOT_RUNNING, OS_ERR_PEND_ABORT, OS_ERR_PEND_ISR, OS_ERR_PEND_WOULD_BLOCK, OS_ERR_SCHED_LOCKED, OS_ERR_STATUS_INVALID, OS_ERR_TIMEOUT
+abort_err_type = OS_ERR_NONE, OS_ERR_OBJ_PTR_NULL, OS_ERR_OBJ_TYPE, OS_ERR_OPT_INVALID, OS_ERR_OS_NOT_RUNNING, OS_ERR_PEND_ABORT_ISR, OS_ERR_PEND_ABORT_NONE
+getready_err_type = OS_ERR_NONE, OS_ERR_OS_NOT_RUNNING, OS_ERR_PEND_ISR
+post_err_type = OS_ERR_NONE, OS_ERR_OBJ_PTR_NULL, OS_ERR_OBJ_TYPE, OS_ERR_OPT_INVALID, OS_ERR_OS_NOT_RUNNING
+
+
+OS_FLAG_GRP {
+    Type        OS_OBJ_TYPE
+    NamePtr     ptr[in, CPU_CHAR, opt]
+    PendList    OS_PEND_LIST
+    DbgPrevPtr  ptr[in, OS_FLAG_GRP, opt]
+    DbgNextPtr  ptr[in, OS_FLAG_GRP, opt]
+    DbgNamePtr  ptr[in, CPU_CHAR, opt]
+    Flags       OS_FLAGS
+    TS          CPU_TS
+    FlagID      int16
+}
+
+OS_PEND_LIST{
+    HeadPtr     ptr[in, OS_TCB]
+    TailPtr     ptr[in, OS_TCB]
+    NbrEntries  OS_OBJ_QTY[opt]
+}
+
+/* TODO: missing this big struct */
+
+OS_TCB{
+
+}
