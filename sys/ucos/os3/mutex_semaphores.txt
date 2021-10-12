@@ -1,19 +1,129 @@
-
-include<Source/os.h>
-
-OSMutexCreate(p_mutex ptr[inout, OS_MUTEX], p_name ptr[inout, CPU_CHAR], p_err ptr[inout, flags[cret_err_type]])
-OSMutexDel(p_mutex ptr[in, OS_MUTEX], opt flags[del_opt_flags, int16], p_err ptr[inout, flags[del_err_type]]) OS_OBJ_QTY
+include <Source/os.h>
 
 
+OSMutexCreate(p_mutex ptr[out, OS_MUTEX], p_name ptr[in, CPU_CHAR], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSMutexDel(p_mutex ptr[in, OS_MUTEX], opt flags[del_opt_flags, int16], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_OBJ_QTY
+OSMutexPend(p_mutex ptr[in, OS_MUTEX], timeout OS_TICK, opt flags[pend_opt_flags, int16], p_ts ptr[in, CPU_TS], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSMutexPendAbort(p_mutex ptr[in, OS_MUTEX], opt flags[abort_opt_flags, int16], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_OBJ_QTY
+OSMutexPost(p_mutex ptr[in, OS_MUTEX], opt flags[post_opt_flags, int16], p_err ptr[out, const[OS_ERR_NONE, int16]]) 
 
-type CPU_CHAR   char
-type OS_OBJ_QTY int16
-
-cret_err_type = OS_ERR_NONE, OS_ERR_CREATE_ISR, OS_ERR_ILLEGAL_CREATE_RUN_TIME, OS_ERR_OBJ_PTR_NULL
-del_err_type = OS_ERR_NONE, OS_ERR_DEL_ISR, OS_ERR_ILLEGAL_DEL_RUN_TIME, OS_ERR_OBJ_PTR_NULL, OS_ERR_OBJ_TYPE, OS_ERR_OPT_INVALID, OS_ERR_OS_NOT_RUNNING, OS_ERR_TASK_WAITING
 
 del_opt_flags = OS_OPT_DEL_NO_PEND, OS_OPT_DEL_ALWAYS
+pend_opt_flags = OS_OPT_PEND_BLOCKING, OS_OPT_PEND_NON_BLOCKING
+abort_opt_flags = OS_OPT_PEND_ABORT_1, OS_OPT_PEND_ABORT_ALL, OS_OPT_POST_NO_SCHED
+post_opt_flags = OS_OPT_POST_NONE, OS_OPT_POST_NO_SCHED
 
-OS_MUTEX{
 
+type CPU_CHAR       int8
+type OS_STATE       int8
+type OS_PRIO        int8
+type OS_NESTING_CTR int8
+type OS_OPT         int16
+type OS_REG         int16
+type OS_OBJ_QTY     int16
+type OS_MSG_QTY     int16
+type OS_MSG_SIZE    int16
+type OS_CPU_USAGE   int16
+type CPU_TS         int32
+type CPU_STK        int32
+type OS_TICK        int32
+type OS_FLAGS       int32
+type OS_CYCLES      int32
+type OS_SEM_CTR     int32
+type OS_CTX_SW_CTR  int32
+type OS_OBJ_TYPE    int32
+type CPU_STK_SIZE   int64
+type OS_TASK_PTR    ptr[int64]
+
+
+OS_MUTEX {
+    Type            OS_OBJ_TYPE
+    NamePtr         ptr[CPU_CHAR]
+    PendList        OS_PEND_LIST
+    DbgPrevPtr      ptr[OS_MUTEX]
+    DbgNextPtr      ptr[OS_MUTEX]
+    DbgNamePtr      ptr[CPU_CHAR]
+    MutexGrpNextPtr ptr[OS_MUTEX]
+    OwnerTCBPtr     ptr[OS_TCB]
+    OwnerNestingCtr ptr[OS_NESTING_CTR]
+}
+
+OS_TCB {
+    StkPtr          ptr[CPU_STK]
+    ExtPtr          ptr[void]
+    StkLimitPtr     ptr[CPU_STK]
+    NamePtr         ptr[CPU_CHAR]
+    NextPtr         ptr[OS_TCB]
+    PrevPtr         ptr[OS_TCB]
+    TickNextPtr     ptr[OS_TCB]
+    TickPrevPtr     ptr[OS_TCB]
+    StkBasePtr      ptr[CPU_STK]
+    TaskEntryAddr   OS_TASK_PTR
+    TaskEntryArg    ptr[void]
+    PendNextPtr     ptr[OS_TCB]
+    PendPrevPtr     ptr[OS_TCB]
+    PendObjPtr      ptr[OS_PEND_OBJ] 
+    PendOn          OS_STATE
+    Prio            OS_PRIO
+    BasePrio        OS_PRIO
+    MutexGrpHeadPtr ptr[OS_MUTEX]
+    StkSize         CPU_STK_SIZE
+    Opt             OS_OPT
+    SemCtr          OS_SEM_CTR
+    TickRemain      OS_TICK
+    TickCtrPrev     OS_TICK
+    TimeQuanta      OS_TICK
+    TimeQuantaCtr   OS_TICK
+    MsgPtr          ptr[void]
+    MsgSize         OS_MSG_SIZE
+    MsgQ            OS_MSG_Q
+    MsgQPendTime    CPU_TS
+    MsgQPendTimeMax CPU_TS
+    RegTbl          array[OS_REG, OS_CFG_TASK_REG_TBL_SIZE]
+    FlagsPend       OS_FLAGS
+    FlagsRdy        OS_FLAGS
+    FlagsOpt        OS_OPT
+    SuspendCtr      OS_NESTING_CTR
+    CPUUsage        OS_CPU_USAGE
+    CPUUsageMax     OS_CPU_USAGE
+    CtxSwCtr        OS_CTX_SW_CTR
+    CyclesDelta     CPU_TS
+    CyclesStart     CPU_TS
+    CyclesTotal     OS_CYCLES
+    CyclesTotalPrev OS_CYCLES
+    SemPendTime     CPU_TS
+    SemPendTimeMax  CPU_TS
+    StkUsed         CPU_STK_SIZE
+    StkFree         CPU_STK_SIZE
+    DbgPrevPtr      ptr[OS_TCB]
+    DbgNextPtr      ptr[OS_TCB]
+    DbgNamePtr      ptr[CPU_CHAR]
+}
+
+OS_PEND_LIST {
+    HeadPtr     ptr[in, OS_TCB]
+    TailPtr     ptr[in, OS_TCB]
+    NbrEntries  OS_OBJ_QTY
+}
+
+OS_PEND_OBJ {
+    Type            OS_OBJ_TYPE
+    NamePtr         ptr[CPU_CHAR]
+    PendList        OS_PEND_LIST
+    DbgPrevPtr      ptr[void]
+    DbgNextPtr      ptr[void]
+    DbgNamePtr      ptr[CPU_CHAR]
+}
+
+OS_MSG_Q {
+    InPtr           ptr[OS_MSG]
+    OutPtr          ptr[OS_MSG]
+    NbrEntriesSize  OS_MSG_QTY
+    NbrEntries      OS_MSG_QTY
+}
+
+OS_MSG {
+    NextPtr         ptr[OS_MSG]
+    MsgPtr          ptr[void]
+    MsgSize         OS_MSG_SIZE
 }

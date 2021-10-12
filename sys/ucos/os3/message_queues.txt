@@ -1,19 +1,18 @@
 include <Source/os.h>
-include <Source/os_cfg.h>
 
 
-OSFlagCreate(p_grp ptr[out, OS_FLAG_GRP], p_name ptr[in, CPU_CHAR], flags OS_FLAGS, p_err ptr[out, const[OS_ERR_NONE, int16]])
-OSFlagDel(p_grp ptr[in, OS_FLAG_GRP], opt flags[del_opt_flags, int16], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_OBJ_QTY
-OSFlagPend(p_grp ptr[in, OS_FLAG_GRP], flags OS_FLAGS, timeout OS_TICK, opt flags[pend_opt_flags, int16], p_ts ptr[inout, CPU_TS], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_FLAGS
-OSFlagPendAbort(p_grp ptr[in, OS_FLAG_GRP], opt flags[abort_opt_flags, int16], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_OBJ_QTY
-OSFlagPendGetFlagsRdy(p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_FLAGS
-OSFlagPost(p_grp ptr[in, OS_FLAG_GRP], flags OS_FLAGS, opt flags[post_opt_flags, int16], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_FLAGS
+OSMutexCreate(p_q ptr[out, OS_Q], p_name ptr[in, CPU_CHAR], max_qty OS_MSG_QTY, p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSQDel(p_q ptr[in, OS_Q], opt flags[del_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_OBJ_QTY
+OSQFlush(p_q ptr[in, OS_Q], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_MSG_QTY
+OSQPend(p_q ptr[in, OS_Q], timeout OS_TICK, opt flags[pend_opt_flags], p_msg_size ptr[in, OS_MSG_SIZE], p_ts ptr[in, CPU_TS], p_err ptr[out, const[OS_ERR_NONE, int16]]) ptr[void]
+OSQPendAbort(p_q ptr[in, OS_Q], opt flags[abort_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_OBJ_QTY
+OSQPost(p_q ptr[in, OS_Q], p_void ptr[void], msg_size ptr[out, OS_MSG_SIZE], opt flags[post_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]])
 
 
 del_opt_flags = OS_OPT_DEL_NO_PEND, OS_OPT_DEL_ALWAYS
-pend_opt_flags = OS_OPT_PEND_FLAG_CLR_ALL, OS_OPT_PEND_FLAG_CLR_ANY, OS_OPT_PEND_FLAG_SET_ALL, OS_OPT_PEND_FLAG_SET_ANY, OS_OPT_PEND_FLAG_CONSUME, OS_OPT_PEND_BLOCKING, OS_OPT_PEND_NON_BLOCKING
+pend_opt_flags = OS_OPT_PEND_BLOCKING, OS_OPT_PEND_NON_BLOCKING
 abort_opt_flags = OS_OPT_PEND_ABORT_1, OS_OPT_PEND_ABORT_ALL, OS_OPT_POST_NO_SCHED
-post_opt_flags = OS_OPT_POST_FLAG_SET, OS_OPT_POST_FLAG_CLR, OS_OPT_POST_NO_SCHED
+post_opt_flags = OS_OPT_POST_FIFO, OS_OPT_POST_LIFO, OS_OPT_POST_ALL, OS_OPT_POST_NO_SCHED
 
 
 type CPU_CHAR       int8
@@ -38,14 +37,27 @@ type CPU_STK_SIZE   int64
 type OS_TASK_PTR    ptr[int64]
 
 
-OS_FLAG_GRP {
-    Type        OS_OBJ_TYPE
-    NamePtr     ptr[in, CPU_CHAR]
-    PendList    OS_PEND_LIST
-    DbgPrevPtr  ptr[in, OS_FLAG_GRP]
-    DbgNextPtr  ptr[in, OS_FLAG_GRP]
-    DbgNamePtr  ptr[in, CPU_CHAR]
-    Flags       OS_FLAGS
+OS_Q {
+    Type            OS_OBJ_TYPE
+    NamePtr         ptr[CPU_CHAR]
+    PendList        OS_PEND_LIST
+    DbgPrevPtr      ptr[OS_Q]
+    DbgNextPtr      ptr[OS_Q]
+    DbgNamePtr      ptr[CPU_CHAR]
+    MsgQ            OS_MSG_Q
+}
+
+OS_MSG_Q {
+    InPtr           ptr[OS_MSG]
+    OutPtr          ptr[OS_MSG]
+    NbrEntriesSize  OS_MSG_QTY
+    NbrEntries      OS_MSG_QTY
+}
+
+OS_MSG {
+    NextPtr         ptr[OS_MSG]
+    MsgPtr          ptr[void]
+    MsgSize         OS_MSG_SIZE
 }
 
 OS_TCB {
@@ -125,17 +137,4 @@ OS_MUTEX {
     MutexGrpNextPtr ptr[OS_MUTEX]
     OwnerTCBPtr     ptr[OS_TCB]
     OwnerNestingCtr ptr[OS_NESTING_CTR]
-}
-
-OS_MSG_Q {
-    InPtr           ptr[OS_MSG]
-    OutPtr          ptr[OS_MSG]
-    NbrEntriesSize  OS_MSG_QTY
-    NbrEntries      OS_MSG_QTY
-}
-
-OS_MSG {
-    NextPtr         ptr[OS_MSG]
-    MsgPtr          ptr[void]
-    MsgSize         OS_MSG_SIZE
 }

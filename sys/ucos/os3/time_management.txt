@@ -1,19 +1,17 @@
 include <Source/os.h>
-include <Source/os_cfg.h>
 
 
-OSFlagCreate(p_grp ptr[out, OS_FLAG_GRP], p_name ptr[in, CPU_CHAR], flags OS_FLAGS, p_err ptr[out, const[OS_ERR_NONE, int16]])
-OSFlagDel(p_grp ptr[in, OS_FLAG_GRP], opt flags[del_opt_flags, int16], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_OBJ_QTY
-OSFlagPend(p_grp ptr[in, OS_FLAG_GRP], flags OS_FLAGS, timeout OS_TICK, opt flags[pend_opt_flags, int16], p_ts ptr[inout, CPU_TS], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_FLAGS
-OSFlagPendAbort(p_grp ptr[in, OS_FLAG_GRP], opt flags[abort_opt_flags, int16], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_OBJ_QTY
-OSFlagPendGetFlagsRdy(p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_FLAGS
-OSFlagPost(p_grp ptr[in, OS_FLAG_GRP], flags OS_FLAGS, opt flags[post_opt_flags, int16], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_FLAGS
+OSTimeDly(dly OS_TICK, opt flags[dly_opt_flags, int16], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTimeDlyHMSM(hours int16[0:999], minutes int16[0:9999], seconds int16, milli int32, opt flags[dlyhmsm_opt_flags, int16], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTimeDlyResume(p_tcb ptr[in, OS_TCB], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTimeGet(p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_TICK
+OSTimeSet(ticks OS_TICK, p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTimeTick(void)
+OSTimeTickHook(void)
 
 
-del_opt_flags = OS_OPT_DEL_NO_PEND, OS_OPT_DEL_ALWAYS
-pend_opt_flags = OS_OPT_PEND_FLAG_CLR_ALL, OS_OPT_PEND_FLAG_CLR_ANY, OS_OPT_PEND_FLAG_SET_ALL, OS_OPT_PEND_FLAG_SET_ANY, OS_OPT_PEND_FLAG_CONSUME, OS_OPT_PEND_BLOCKING, OS_OPT_PEND_NON_BLOCKING
-abort_opt_flags = OS_OPT_PEND_ABORT_1, OS_OPT_PEND_ABORT_ALL, OS_OPT_POST_NO_SCHED
-post_opt_flags = OS_OPT_POST_FLAG_SET, OS_OPT_POST_FLAG_CLR, OS_OPT_POST_NO_SCHED
+dly_opt_flags = OS_OPT_TIME_DLY, OS_OPT_TIME_TIMEOUT, OS_OPT_TIME_PERIODIC, OS_OPT_TIME_MATCH
+dlyhmsm_opt_flags = OS_OPT_TIME_HMSM_STRICT, OS_OPT_TIME_HMSM_NON_STRICT, OS_OPT_TIME_DLY, OS_OPT_TIME_TIMEOUT, OS_OPT_TIME_PERIODIC, OS_OPT_TIME_MATCH
 
 
 type CPU_CHAR       int8
@@ -37,16 +35,6 @@ type OS_OBJ_TYPE    int32
 type CPU_STK_SIZE   int64
 type OS_TASK_PTR    ptr[int64]
 
-
-OS_FLAG_GRP {
-    Type        OS_OBJ_TYPE
-    NamePtr     ptr[in, CPU_CHAR]
-    PendList    OS_PEND_LIST
-    DbgPrevPtr  ptr[in, OS_FLAG_GRP]
-    DbgNextPtr  ptr[in, OS_FLAG_GRP]
-    DbgNamePtr  ptr[in, CPU_CHAR]
-    Flags       OS_FLAGS
-}
 
 OS_TCB {
     StkPtr          ptr[CPU_STK]
