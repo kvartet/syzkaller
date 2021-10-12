@@ -8,7 +8,7 @@ In this version, I have only sketched out the APIs of [*μC/OS*](https://micrium
 
    But for the member of structs whose type is the pointer, instead of careful processing and judgment, I give them the default type `in`, as the project is too big...
 
-   There is also a special treatment. In $syzlang$, only simple types, that is, various variants of int, can be used as “resources”. *μC/OS* mostly uses complex structures to represent a structure, it is difficult to control the generation order in this way. Instead, we adopted a little trick: for the function that creates a certain [*task*](https://micrium.atlassian.net/wiki/spaces/osiiidoc/pages/131329/About+Task+Management), we set its parameter as `out`, and for other functions that manipulate tasks, its parameter is `in`.
+   There is also a special treatment. In *syzlang*, only simple types, that is, various variants of int, can be used as “resources”. *μC/OS* mostly uses complex structures to represent a structure, it is difficult to control the generation order in this way. Instead, we adopted a little trick: for the function that creates a certain [*task*](https://micrium.atlassian.net/wiki/spaces/osiiidoc/pages/131329/About+Task+Management), we set its parameter as `out`, and for other functions that manipulate tasks, its parameter is `in`.
 
 2. More specialization.
 
