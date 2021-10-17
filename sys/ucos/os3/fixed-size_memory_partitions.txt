@@ -1,0 +1,24 @@
+include <Source/os.h>
+
+
+OSMemCreate(p_mem ptr[out, OS_MEM], p_name ptr[in, CPU_CHAR], p_addr ptr[void], n_blks OS_MEM_QTY[2:], blk_size OS_MEM_SIZE, p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSMemGet(p_mem ptr[in, OS_MEM], p_err ptr[out, const[OS_ERR_NONE, int16]]) ptr[void]
+OSMemPut(p_mem ptr[in, OS_MEM], p_blk ptr[void], p_err ptr[out, const[OS_ERR_NONE, int16]])
+
+
+type OS_MEM_QTY     int16
+type OS_MEM_SIZE    int16
+type OS_OBJ_TYPE    int32
+
+
+OS_MEM {
+    Type            OS_OBJ_TYPE
+    NamePtr         ptr[CPU_CHAR]
+    AddrPtr         ptr[void]
+    FreeListPtr     ptr[void]
+    BlkSize         OS_MEM_SIZE
+    NbrMax          OS_MEM_QTY
+    NbrFree         OS_MEM_QTY
+    DbgPrevPtr      ptr[OS_MEM]
+    DbgNextPtr      ptr[OS_MEM]
+}

@@ -1,0 +1,8 @@
+include <Source/os.h>
+
+OS_DynTickGet(void) OS_TICK
+OS_DynTickSet (ticks OS_TICK) OS_TICK
+OSTimeDynTick (ticks OS_TICK) void
+
+
+type OS_TICK        int32

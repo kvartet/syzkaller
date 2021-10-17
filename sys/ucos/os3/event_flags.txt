@@ -1,5 +1,4 @@
 include <Source/os.h>
-include <Source/os_cfg.h>
 
 
 OSFlagCreate(p_grp ptr[out, OS_FLAG_GRP], p_name ptr[in, CPU_CHAR], flags OS_FLAGS, p_err ptr[out, const[OS_ERR_NONE, int16]])

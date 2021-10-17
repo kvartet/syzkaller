@@ -1,0 +1,158 @@
+include <Source/os.h>
+
+
+# task management
+OSSchedRoundRobinCfg(en CPU_BOOLEAN, dflt_time_quanta OS_TICK, p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSSchedRoundRobinYield(p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskChangePrio(p_tcb ptr[in, OS_TCB], prio_new OS_PRIO[1:62], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskCreate(p_tcb ptr[out, OS_TCB], p_name ptr[in, CPU_CHAR], p_task OS_TASK_PTR, p_arg ptr[void], prio OS_PRIO[2:61], p_stk_base ptr[in, CPU_STK], stk_limit CPU_STK_SIZE, stk_size CPU_STK_SIZE, q_size OS_MSG_QTY, time_quanta OS_TICK, p_ext ptr[void], opt flags[create_opt_flags, int16], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskDel(p_tcb ptr[in, OS_TCB], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskRegGet(p_tcb ptr[in, OS_TCB], id const[0, OS_REG_ID], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_REG
+OSTaskRegGetID(p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_REG_ID
+OSTaskRegSet(p_tcb ptr[in, OS_TCB], id const[0, OS_REG_ID], value OS_REG, p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskResume(p_tcb ptr[in, OS_TCB], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskSuspend(p_tcb ptr[in, OS_TCB], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskStkChk(p_tcb ptr[in, OS_TCB], p_free ptr[in, CPU_STK_SIZE], p_used ptr[in, CPU_STK_SIZE], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskStkInit(p_task OS_TASK_PTR, p_arg ptr[void], p_stk_base ptr[in, CPU_STK], p_stk_limit ptr[in, CPU_STK], stk_size CPU_STK_SIZE, p_err ptr[out, const[OS_ERR_NONE, int16]]) ptr[CPU_STK]
+OSTaskTimeQuantaSet(p_tcb ptr[in, OS_TCB], time_quanta OS_TICK, p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskCreateHook(p_tcb ptr[in, OS_TCB])
+OSTaskDelHook(p_tcb ptr[in, OS_TCB])
+OSTaskReturnHook(p_tcb ptr[in, OS_TCB])
+OSTaskSwHook(void)
+
+# task semaphores
+OSTaskSemPend(timeout OS_TICK, opt flags[sempend_opt_flags, int16], p_ts ptr[in, CPU_TS], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_SEM_CTR
+OSTaskSemPendAbort(p_tcb ptr[in, OS_TCB], opt flags[sempendabort_opt_flags, int16], p_err ptr[out, const[OS_ERR_NONE, int16]]) CPU_BOOLEAN
+OSTaskSemPost(p_tcb ptr[in, OS_TCB], opt flags[sempost_opt_flags, int16], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_SEM_CTR
+OSTaskSemSet(p_tcb ptr[in, OS_TCB], cnt OS_SEM_CTR, p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_SEM_CTR
+
+# task message queues
+OSTaskQFlush(p_tcb ptr[in, OS_TCB], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_MSG_QTY
+OSTaskQPend(timeout OS_TICK, opt flags[qpend_opt_flags, int16], p_msg_size ptr[in, OS_MSG_SIZE], p_ts ptr[in, CPU_TS], p_err ptr[out, const[OS_ERR_NONE, int16]]) ptr[void]
+OSTaskQPendAbort(p_tcb ptr[in, OS_TCB], opt flags[qpendabort_opt_flags, int16], p_err ptr[out, const[OS_ERR_NONE, int16]]) CPU_BOOLEAN
+OSTaskQPost(p_tcb ptr[in, OS_TCB], p_void ptr[void], msg_size OS_MSG_SIZE, opt flags[qpost_opt_flags, int16], p_err ptr[out, const[OS_ERR_NONE, int16]])
+
+
+create_opt_flags = OS_OPT_TASK_NONE, OS_OPT_TASK_STK_CHK, OS_OPT_TASK_STK_CLR, OS_OPT_TASK_SAVE_FP, OS_OPT_TASK_NO_TLS
+qpend_opt_flags = OS_OPT_PEND_BLOCKING, OS_OPT_PEND_NON_BLOCKING
+qpendabort_opt_flags = OS_OPT_POST_NONE, OS_OPT_POST_NO_SCHED
+qpost_opt_flags = OS_OPT_POST_FIFO, OS_OPT_POST_LIFO, OS_OPT_POST_NO_SCHED
+sempend_opt_flags = OS_OPT_PEND_BLOCKING, OS_OPT_PEND_NON_BLOCKING
+sempendabort_opt_flags = OS_OPT_POST_NONE, OS_OPT_POST_NO_SCHED
+sempost_opt_flags = OS_OPT_POST_NONE, OS_OPT_POST_NO_SCHED
+
+
+type CPU_CHAR       int8
+type OS_STATE       int8
+type OS_PRIO        int8
+type OS_REG_ID      int8
+type OS_NESTING_CTR int8
+type OS_OPT         int16
+type OS_REG         int16
+type OS_OBJ_QTY     int16
+type OS_MSG_QTY     int16
+type OS_MSG_SIZE    int16
+type OS_CPU_USAGE   int16
+type CPU_TS         int32
+type CPU_STK        int32
+type OS_TICK        int32
+type OS_FLAGS       int32
+type OS_CYCLES      int32
+type OS_SEM_CTR     int32
+type OS_CTX_SW_CTR  int32
+type OS_OBJ_TYPE    int32
+type CPU_STK_SIZE   int64
+type OS_TASK_PTR    ptr[int64]
+
+
+OS_TCB {
+    StkPtr          ptr[CPU_STK]
+    ExtPtr          ptr[void]
+    StkLimitPtr     ptr[CPU_STK]
+    NamePtr         ptr[CPU_CHAR]
+    NextPtr         ptr[OS_TCB]
+    PrevPtr         ptr[OS_TCB]
+    TickNextPtr     ptr[OS_TCB]
+    TickPrevPtr     ptr[OS_TCB]
+    StkBasePtr      ptr[CPU_STK]
+    TaskEntryAddr   OS_TASK_PTR
+    TaskEntryArg    ptr[void]
+    PendNextPtr     ptr[OS_TCB]
+    PendPrevPtr     ptr[OS_TCB]
+    PendObjPtr      ptr[OS_PEND_OBJ] 
+    PendOn          OS_STATE
+    Prio            OS_PRIO
+    BasePrio        OS_PRIO
+    MutexGrpHeadPtr ptr[OS_MUTEX]
+    StkSize         CPU_STK_SIZE
+    Opt             OS_OPT
+    SemCtr          OS_SEM_CTR
+    TickRemain      OS_TICK
+    TickCtrPrev     OS_TICK
+    TimeQuanta      OS_TICK
+    TimeQuantaCtr   OS_TICK
+    MsgPtr          ptr[void]
+    MsgSize         OS_MSG_SIZE
+    MsgQ            OS_MSG_Q
+    MsgQPendTime    CPU_TS
+    MsgQPendTimeMax CPU_TS
+    RegTbl          array[OS_REG, OS_CFG_TASK_REG_TBL_SIZE]
+    FlagsPend       OS_FLAGS
+    FlagsRdy        OS_FLAGS
+    FlagsOpt        OS_OPT
+    SuspendCtr      OS_NESTING_CTR
+    CPUUsage        OS_CPU_USAGE
+    CPUUsageMax     OS_CPU_USAGE
+    CtxSwCtr        OS_CTX_SW_CTR
+    CyclesDelta     CPU_TS
+    CyclesStart     CPU_TS
+    CyclesTotal     OS_CYCLES
+    CyclesTotalPrev OS_CYCLES
+    SemPendTime     CPU_TS
+    SemPendTimeMax  CPU_TS
+    StkUsed         CPU_STK_SIZE
+    StkFree         CPU_STK_SIZE
+    DbgPrevPtr      ptr[OS_TCB]
+    DbgNextPtr      ptr[OS_TCB]
+    DbgNamePtr      ptr[CPU_CHAR]
+}
+
+OS_PEND_LIST {
+    HeadPtr     ptr[in, OS_TCB]
+    TailPtr     ptr[in, OS_TCB]
+    NbrEntries  OS_OBJ_QTY
+}
+
+OS_PEND_OBJ {
+    Type            OS_OBJ_TYPE
+    NamePtr         ptr[CPU_CHAR]
+    PendList        OS_PEND_LIST
+    DbgPrevPtr      ptr[void]
+    DbgNextPtr      ptr[void]
+    DbgNamePtr      ptr[CPU_CHAR]
+}
+
+OS_MUTEX {
+    Type            OS_OBJ_TYPE
+    NamePtr         ptr[CPU_CHAR]
+    PendList        OS_PEND_LIST
+    DbgPrevPtr      ptr[OS_MUTEX]
+    DbgNextPtr      ptr[OS_MUTEX]
+    DbgNamePtr      ptr[CPU_CHAR]
+    MutexGrpNextPtr ptr[OS_MUTEX]
+    OwnerTCBPtr     ptr[OS_TCB]
+    OwnerNestingCtr ptr[OS_NESTING_CTR]
+}
+
+OS_MSG_Q {
+    InPtr           ptr[OS_MSG]
+    OutPtr          ptr[OS_MSG]
+    NbrEntriesSize  OS_MSG_QTY
+    NbrEntries      OS_MSG_QTY
+}
+
+OS_MSG {
+    NextPtr         ptr[OS_MSG]
+    MsgPtr          ptr[void]
+    MsgSize         OS_MSG_SIZE
+}
