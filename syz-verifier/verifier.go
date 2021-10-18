@@ -4,136 +4,256 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"syscall"
+	"io"
+	"math/rand"
+	"os"
+	"os/signal"
+	"path/filepath"
+	"strings"
+	"time"
 
-	"github.com/google/syzkaller/pkg/ipc"
+	"github.com/google/syzkaller/pkg/instance"
+	"github.com/google/syzkaller/pkg/log"
+	"github.com/google/syzkaller/pkg/osutil"
 	"github.com/google/syzkaller/prog"
+	"github.com/google/syzkaller/vm"
 )
 
-// Result stores the results of executing a program.
-type Result struct {
-	// Pool is the index of the pool.
-	Pool int
-	// Hanged is set to true when a program was killed due to hanging.
-	Hanged bool
-	// Info contains information about the execution of each system call
-	// in the generated programs.
-	Info ipc.ProgInfo
-	// Crashed is set to true if a crash occurred while executing the program.
-	Crashed bool
-
-	RunIdx int
+// Verifier TODO.
+type Verifier struct {
+	pools  map[int]*poolInfo
+	vmStop chan bool
+	// Location of a working directory for all VMs for the syz-verifier process.
+	// Outputs here include:
+	// - <workdir>/crashes/<OS-Arch>/*: crash output files grouped by OS/Arch
+	// - <workdir>/corpus.db: corpus with interesting programs
+	// - <workdir>/<OS-Arch>/instance-x: per VM instance temporary files
+	// grouped by OS/Arch
+	workdir       string
+	crashdir      string
+	resultsdir    string
+	target        *prog.Target
+	runnerBin     string
+	executorBin   string
+	choiceTable   *prog.ChoiceTable
+	rnd           *rand.Rand
+	progIdx       int
+	addr          string
+	srv           *RPCServer
+	calls         map[*prog.Syscall]bool
+	reasons       map[*prog.Syscall]string
+	reportReasons bool
+	stats         *Stats
+	statsWrite    io.Writer
+	newEnv        bool
+	reruns        int
 }
 
-type ResultReport struct {
-	// Prog is the serialized program.
-	Prog string
-	// Reports contains information about each system call.
-	Reports []*CallReport
-}
-
-type CallReport struct {
-	// Call is the name of the system call.
-	Call string
-	// States is a map between pools and their return state when executing the system call.
-	States map[int]ReturnState
-	// Mismatch is set to true if the returned error codes were not the same.
-	Mismatch bool
-}
-
-// ReturnState stores the results of executing a system call.
-type ReturnState struct {
-	// Errno is returned by executing the system call.
-	Errno int
-	// Flags stores the call flags (see pkg/ipc/ipc.go).
-	Flags ipc.CallFlags
-	// Crashed is set to true if the kernel crashed while executing the program
-	// that contains the system call.
-	Crashed bool
-}
-
-func (s ReturnState) String() string {
-	state := ""
-
-	if s.Crashed {
-		return "Crashed"
+// SetPrintStatAtSIGINT asks Stats object to report verification
+// statistics when an os.Interrupt occurs and Exit().
+func (vrf *Verifier) SetPrintStatAtSIGINT() error {
+	if vrf.stats == nil {
+		return errors.New("verifier.stats is nil")
 	}
 
-	state += fmt.Sprintf("Flags: %d, ", s.Flags)
-	errDesc := "success"
-	if s.Errno != 0 {
-		errDesc = syscall.Errno(s.Errno).Error()
-	}
-	state += fmt.Sprintf("Errno: %d (%s)", s.Errno, errDesc)
-	return state
+	osSignalChannel := make(chan os.Signal)
+	signal.Notify(osSignalChannel, os.Interrupt)
+
+	go func() {
+		<-osSignalChannel
+		defer os.Exit(0)
+
+		totalExecutionTime := time.Since(vrf.stats.StartTime).Minutes()
+		if vrf.stats.TotalMismatches < 0 {
+			fmt.Fprint(vrf.statsWrite, "No mismatches occurred until syz-verifier was stopped.")
+		} else {
+			fmt.Fprintf(vrf.statsWrite, "%s", vrf.stats.GetTextDescription(totalExecutionTime))
+		}
+	}()
+
+	return nil
 }
 
-// VeifyRerun compares the results obtained from rerunning a program with what
-// was reported in the initial result report.
-func VerifyRerun(res []*Result, rr *ResultReport) bool {
-	for idx, cr := range rr.Reports {
-		for _, r := range res {
-			var state ReturnState
-			if r.Crashed {
-				state = ReturnState{Crashed: true}
-			} else {
-				ci := r.Info.Calls[idx]
-				state = ReturnState{Errno: ci.Errno, Flags: ci.Flags}
+func (vrf *Verifier) startInstances() {
+	for idx, pi := range vrf.pools {
+		go func(pi *poolInfo, idx int) {
+			for {
+				// TODO: implement support for multiple VMs per Pool.
+
+				vrf.createAndManageInstance(pi, idx)
 			}
-			if state != cr.States[r.Pool] {
-				return false
+		}(pi, idx)
+	}
+
+	select {}
+}
+
+func (vrf *Verifier) createAndManageInstance(pi *poolInfo, idx int) {
+	inst, err := pi.pool.Create(0)
+	if err != nil {
+		log.Fatalf("failed to create instance: %v", err)
+	}
+	defer inst.Close()
+	defer vrf.srv.cleanup(idx, 0)
+
+	fwdAddr, err := inst.Forward(vrf.srv.port)
+	if err != nil {
+		log.Fatalf("failed to set up port forwarding: %v", err)
+	}
+
+	runnerBin, err := inst.Copy(vrf.runnerBin)
+	if err != nil {
+		log.Fatalf(" failed to copy runner binary: %v", err)
+	}
+	_, err = inst.Copy(vrf.executorBin)
+	if err != nil {
+		log.Fatalf("failed to copy executor binary: %v", err)
+	}
+
+	cmd := instance.RunnerCmd(runnerBin, fwdAddr, vrf.target.OS, vrf.target.Arch, idx, 0, false, false, vrf.newEnv)
+	outc, errc, err := inst.Run(pi.cfg.Timeouts.VMRunningTime, vrf.vmStop, cmd)
+	if err != nil {
+		log.Fatalf("failed to start runner: %v", err)
+	}
+
+	inst.MonitorExecution(outc, errc, pi.Reporter, vm.ExitTimeout)
+
+	log.Logf(0, "reboot the VM in pool %d", idx)
+}
+
+// finalizeCallSet removes the system calls that are not supported from the set
+// of enabled system calls and reports the reason to the io.Writer (either
+// because the call is not supported by one of the kernels or because the call
+// is missing some transitive dependencies). The resulting set of system calls
+// will be used to build the prog.ChoiceTable.
+func (vrf *Verifier) finalizeCallSet(w io.Writer) {
+	for c := range vrf.reasons {
+		delete(vrf.calls, c)
+	}
+
+	// Find and report to the user all the system calls that need to be
+	// disabled due to missing dependencies.
+	_, disabled := vrf.target.TransitivelyEnabledCalls(vrf.calls)
+	for c, reason := range disabled {
+		vrf.reasons[c] = reason
+		delete(vrf.calls, c)
+	}
+
+	if len(vrf.calls) == 0 {
+		log.Logf(0, "All enabled system calls are missing dependencies or not"+
+			" supported by some kernels, exiting syz-verifier.")
+	}
+
+	if !vrf.reportReasons {
+		return
+	}
+
+	fmt.Fprintln(w, "The following calls have been disabled:")
+	for c, reason := range vrf.reasons {
+		fmt.Fprintf(w, "\t%v: %v\n", c.Name, reason)
+	}
+}
+
+// processResults will send a set of complete results for verification and, in
+// case differences are found, it will start the rerun process for the program
+// (if reruns are enabled). If every rerun produces the same results, the result
+// report will be printed to persistent storage. Otherwise, the program is
+// discarded as flaky.
+func (vrf *Verifier) processResults(prog *progInfo) bool {
+	// TODO: Simplify this if clause.
+	if prog.runIdx == 0 {
+		vrf.stats.TotalProgs++
+		prog.report = Verify(prog.res[0], prog.prog, vrf.stats)
+		if prog.report == nil {
+			return true
+		}
+	} else {
+		if !VerifyRerun(prog.res[prog.runIdx], prog.report) {
+			vrf.stats.FlakyProgs++
+			log.Logf(0, "flaky results detected: %d", vrf.stats.FlakyProgs)
+			return true
+		}
+	}
+
+	if prog.runIdx < vrf.reruns-1 {
+		vrf.srv.newRun(prog)
+		return false
+	}
+
+	rr := prog.report
+	vrf.stats.MismatchingProgs++
+
+	for _, cr := range rr.Reports {
+		if !cr.Mismatch {
+			break
+		}
+		vrf.stats.Calls[cr.Call].Mismatches++
+		vrf.stats.TotalMismatches++
+		for _, state := range cr.States {
+			if state0 := cr.States[0]; state0 != state {
+				vrf.stats.Calls[cr.Call].States[state] = true
+				vrf.stats.Calls[cr.Call].States[state0] = true
 			}
 		}
 	}
+
+	oldest := 0
+	var oldestTime time.Time
+	for i := 0; i < maxResultReports; i++ {
+		info, err := os.Stat(filepath.Join(vrf.resultsdir, fmt.Sprintf("result-%d", i)))
+		if err != nil {
+			// There are only i-1 report files so the i-th one
+			// can be created.
+			oldest = i
+			break
+		}
+
+		// Otherwise, search for the oldest report file to
+		// overwrite as newer result reports are more useful.
+		if oldestTime.IsZero() || info.ModTime().Before(oldestTime) {
+			oldest = i
+			oldestTime = info.ModTime()
+		}
+	}
+
+	err := osutil.WriteFile(filepath.Join(vrf.resultsdir,
+		fmt.Sprintf("result-%d", oldest)), createReport(rr, len(vrf.pools)))
+	if err != nil {
+		log.Logf(0, "failed to write result-%d file, err %v", oldest, err)
+	}
+
+	log.Logf(0, "result-%d written successfully", oldest)
 	return true
 }
 
-// Verify checks whether the Results of the same program, executed on different
-// kernels, are the same. If that's not the case, it returns a ResultReport,
-// highlighting the differences.
-func Verify(res []*Result, prog *prog.Prog, s *Stats) *ResultReport {
-	rr := &ResultReport{
-		Prog: string(prog.Serialize()),
-	}
+// generate will return a newly generated program and its index.
+func (vrf *Verifier) generate() (*prog.Prog, int) {
+	vrf.progIdx++
+	return vrf.target.Generate(vrf.rnd, prog.RecommendedCalls, vrf.choiceTable), vrf.progIdx
+}
 
-	// Build the CallReport for each system call in the program.
-	for idx, call := range prog.Calls {
-		cn := call.Meta.Name
-		s.Calls[cn].Occurrences++
+func createReport(rr *ResultReport, pools int) []byte {
+	calls := strings.Split(rr.Prog, "\n")
+	calls = calls[:len(calls)-1]
 
-		cr := &CallReport{
-			Call:   cn,
-			States: map[int]ReturnState{},
+	data := "ERRNO mismatches found for program:\n\n"
+	for idx, cr := range rr.Reports {
+		tick := "[=]"
+		if cr.Mismatch {
+			tick = "[!]"
+		}
+		data += fmt.Sprintf("%s %s\n", tick, calls[idx])
+
+		// Ensure results are ordered by pool index.
+		for i := 0; i < pools; i++ {
+			state := cr.States[i]
+			data += fmt.Sprintf("\t↳ Pool: %d, %s\n", i, state)
 		}
 
-		for _, r := range res {
-			if r.Crashed {
-				cr.States[r.Pool] = ReturnState{Crashed: true}
-				continue
-			}
-
-			ci := r.Info.Calls[idx]
-			cr.States[r.Pool] = ReturnState{Errno: ci.Errno, Flags: ci.Flags}
-		}
-		rr.Reports = append(rr.Reports, cr)
+		data += "\n"
 	}
 
-	var send bool
-	pool0 := res[0].Pool
-	for _, cr := range rr.Reports {
-		for _, state := range cr.States {
-			// For each CallReport, verify whether the ReturnStates from all
-			// the pools that executed the program are the same
-			if state0 := cr.States[pool0]; state0 != state {
-				cr.Mismatch = true
-				send = true
-			}
-		}
-	}
-
-	if send {
-		return rr
-	}
-	return nil
+	return []byte(data)
 }
