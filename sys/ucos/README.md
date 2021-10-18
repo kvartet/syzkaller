@@ -18,7 +18,7 @@ In this version, I have only sketched out the APIs of [*μC/OS*](https://micrium
 
    Because each module is independent but affects each other, there are many conditional compilation options when describing a module. More annoyingly, these conditional compilation options are written into the struct!!! Similarly, to save time, instead of describing various combinations of structure member variables, we chose the default conditional compilation options, but enabled the `OS_CFG_DBG_EN` parameter.
 
-   For "system calls" which are disabled, I ignore them, too. For example, 'os3/thread_local_storage.txt' is an empty file.
+   For "system calls" which are disabled, I described but commented out them. For example, 'os3/thread_local_storage.txt'.
    
 4. More modules
 

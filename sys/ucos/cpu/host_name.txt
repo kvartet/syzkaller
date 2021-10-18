@@ -1,0 +1,9 @@
+# these were disabled in the default config
+
+# include <cpu_core.h>
+# CPU_NameClr(void)
+# CPU_NameGet(p_name ptr[CPU_CHAR], p_err ptr[out, const[OS_ERR_NONE, int8]])
+# CPU_NameSet(p_name ptr[in, const[CPU_CHAR]], p_err ptr[out, const[OS_ERR_NONE, int8]])
+
+
+# type CPU_CHAR       int8

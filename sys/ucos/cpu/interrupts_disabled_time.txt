@@ -1,0 +1,7 @@
+# these were disabled in the default config
+
+# CPU_IntDisMeasMaxCurGet(void) CPU_TS_TMR
+# CPU_IntDisMeasMaxCurReset(void) CPU_TS_TMR
+# CPU_IntDisMeasMaxGet(void) CPU_TS_TMR
+
+# type CPU_TS_TMR    int32
