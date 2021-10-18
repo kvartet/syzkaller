@@ -1,0 +1,9 @@
+include <lib_math.h>
+
+Math_Init(void)
+Math_RandSetSeed(seed RAND_NBR)
+Math_Rand(void) RAND_NBR
+Math_RandSeed(seed RAND_NBR) RAND_NBR
+
+
+type RAND_NBR       int32

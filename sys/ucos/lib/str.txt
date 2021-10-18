@@ -1,0 +1,34 @@
+include <lib_str.h>
+
+Str_Len(pstr ptr[in, const[CPU_CHAR]]) CPU_SIZE_T
+Str_Len_N(pstr ptr[in, const[CPU_CHAR]], len_max CPU_SIZE_T) CPU_SIZE_T
+Str_Copy(pstr_dest ptr[out, CPU_CHAR], pstr_src ptr[in, const[CPU_CHAR]]) ptr[CPU_CHAR]
+Str_Copy_N(pstr_dest ptr[out, CPU_CHAR], pstr_src ptr[in, const[CPU_CHAR]], len_max CPU_SIZE_T) ptr[CPU_CHAR]
+Str_Cat(pstr_dest ptr[in, CPU_CHAR], pstr_cat ptr[in, const[CPU_CHAR]]) ptr[CPU_CHAR]
+Str_Cat_N(pstr_dest ptr[in, CPU_CHAR], pstr_cat ptr[in, const[CPU_CHAR]], len_max CPU_SIZE_T) ptr[CPU_CHAR]
+Str_Cmp(p1_str ptr[in, const[CPU_CHAR]], p2_str ptr[in, const[CPU_CHAR]]) CPU_INT16S
+Str_Cmp_N(p1_str ptr[in, const[CPU_CHAR]], p2_str ptr[in, const[CPU_CHAR]], len_max CPU_SIZE_T) CPU_INT16S
+Str_CmpIgnoreCase(p1_str ptr[in, const[CPU_CHAR]], p2_str ptr[in, const[CPU_CHAR]]) CPU_INT16S
+Str_CmpIgnoreCase_N(p1_str ptr[in, const[CPU_CHAR]], p2_str ptr[in, const[CPU_CHAR]], len_max CPU_SIZE_T) CPU_INT16S
+Str_Char(pstr ptr[in, const[CPU_CHAR]], srch_char CPU_CHAR) ptr[CPU_CHAR]
+Str_Char_N(pstr ptr[in, const[CPU_CHAR]], len_max CPU_SIZE_T, srch_char CPU_CHAR) ptr[CPU_CHAR]
+Str_Char_Last(pstr ptr[in, const[CPU_CHAR]], srch_char CPU_CHAR) ptr[CPU_CHAR]
+Str_Char_Last_N(pstr ptr[in, const[CPU_CHAR]], len_max CPU_SIZE_T, srch_char CPU_CHAR) ptr[CPU_CHAR]
+Str_Char_Replace(pstr ptr[in, CPU_CHAR], char_srch CPU_CHAR, char_replace CPU_CHAR) ptr[CPU_CHAR]
+Str_Char_Replace_N(pstr ptr[in, CPU_CHAR], char_srch CPU_CHAR, char_replace CPU_CHAR, len_max CPU_SIZE_T) ptr[CPU_CHAR]
+Str_Str(pstr ptr[in, const[CPU_CHAR]], pstr_srch ptr[in, const[CPU_CHAR]]) ptr[CPU_CHAR]
+Str_Str_N(pstr ptr[in, const[CPU_CHAR]], pstr_srch ptr[in, const[CPU_CHAR]], len_max CPU_SIZE_T) ptr[CPU_CHAR]
+Str_FmtNbr_Int32U(nbr CPU_INT32U, nbr_dig CPU_INT08U, nbr_base CPU_INT08U, lead_char CPU_CHAR, lower_case CPU_BOOLEAN, nul CPU_BOOLEAN, pstr ptr[in, CPU_CHAR]) ptr[CPU_CHAR]
+Str_FmtNbr_Int32S(nbr CPU_INT32S, nbr_dig CPU_INT08U, nbr_base CPU_INT08U, lead_char CPU_CHAR, lower_case CPU_BOOLEAN, nul CPU_BOOLEAN, pstr ptr[in, CPU_CHAR]) ptr[CPU_CHAR]
+# Str_FmtNbr_32(nbr CPU_FP32, nbr_dig CPU_INT08U, nbr_dp CPU_INT08U, lead_char CPU_CHAR, nul CPU_BOOLEAN, pstr ptr[in, CPU_CHAR]) ptr[CPU_CHAR]
+Str_ParseNbr_Int32U(pstr ptr[in, const[CPU_CHAR]], pstr_next ptr[ptr[in, CPU_CHAR]], nbr_base CPU_INT08U) CPU_INT32U
+Str_ParseNbr_Int32S(pstr ptr[in, const[CPU_CHAR]], pstr_next ptr[ptr[in, CPU_CHAR]], nbr_base CPU_INT08U) CPU_INT32S
+
+
+type CPU_CHAR           int8
+type CPU_BOOLEAN        int8
+type CPU_INT08U         int8
+type CPU_INT16S         int16
+type CPU_SIZE_T         int32
+type CPU_INT32S         int32
+type CPU_INT32U         int32
