@@ -1,0 +1,45 @@
+include <Source/os.h>
+
+
+# task management
+OSSchedRoundRobinCfg(en CPU_BOOLEAN, dflt_time_quanta OS_TICK, p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSSchedRoundRobinYield(p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskChangePrio(p_tcb ptr[in, OS_TCB], prio_new OS_PRIO[1:62], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskCreate(p_tcb ptr[out, OS_TCB], p_name ptr[in, CPU_CHAR], p_task OS_TASK_PTR, p_arg ptr[in, void], prio OS_PRIO[2:61], p_stk_base ptr[in, CPU_STK], stk_limit CPU_STK_SIZE, stk_size CPU_STK_SIZE, q_size OS_MSG_QTY, time_quanta OS_TICK, p_ext ptr[in, void], opt flags[create_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskDel(p_tcb ptr[in, OS_TCB], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskRegGet(p_tcb ptr[in, OS_TCB], id const[0], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_REG
+OSTaskRegGetID(p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_REG_ID
+OSTaskRegSet(p_tcb ptr[in, OS_TCB], id const[0], value OS_REG, p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskResume(p_tcb ptr[in, OS_TCB], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskSuspend(p_tcb ptr[in, OS_TCB], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskStkChk(p_tcb ptr[in, OS_TCB], p_free ptr[in, CPU_STK_SIZE], p_used ptr[in, CPU_STK_SIZE], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskStkInit(p_task OS_TASK_PTR, p_arg ptr[in, void], p_stk_base ptr[in, CPU_STK], p_stk_limit ptr[in, CPU_STK], stk_size CPU_STK_SIZE, p_err ptr[out, const[OS_ERR_NONE, int16]]) ptr[in, CPU_STK]
+OSTaskTimeQuantaSet(p_tcb ptr[in, OS_TCB], time_quanta OS_TICK, p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTaskCreateHook(p_tcb ptr[in, OS_TCB])
+OSTaskDelHook(p_tcb ptr[in, OS_TCB])
+OSTaskReturnHook(p_tcb ptr[in, OS_TCB])
+OSTaskSwHook()
+
+# task semaphores
+OSTaskSemPend(timeout OS_TICK, opt flags[sempend_opt_flags], p_ts ptr[in, CPU_TS], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_SEM_CTR
+OSTaskSemPendAbort(p_tcb ptr[in, OS_TCB], opt flags[sempendabort_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) CPU_BOOLEAN
+OSTaskSemPost(p_tcb ptr[in, OS_TCB], opt flags[sempost_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_SEM_CTR
+OSTaskSemSet(p_tcb ptr[in, OS_TCB], cnt OS_SEM_CTR, p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_SEM_CTR
+
+# task message queues
+OSTaskQFlush(p_tcb ptr[in, OS_TCB], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_MSG_QTY
+OSTaskQPend(timeout OS_TICK, opt flags[qpend_opt_flags], p_msg_size ptr[in, OS_MSG_SIZE], p_ts ptr[in, CPU_TS], p_err ptr[out, const[OS_ERR_NONE, int16]]) ptr[in, void]
+OSTaskQPendAbort(p_tcb ptr[in, OS_TCB], opt flags[qpendabort_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) CPU_BOOLEAN
+OSTaskQPost(p_tcb ptr[in, OS_TCB], p_void ptr[in, void], msg_size OS_MSG_SIZE, opt flags[qpost_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]])
+
+
+create_opt_flags = OS_OPT_TASK_NONE, OS_OPT_TASK_STK_CHK, OS_OPT_TASK_STK_CLR, OS_OPT_TASK_SAVE_FP, OS_OPT_TASK_NO_TLS
+qpend_opt_flags = OS_OPT_PEND_BLOCKING, OS_OPT_PEND_NON_BLOCKING
+qpendabort_opt_flags = OS_OPT_POST_NONE, OS_OPT_POST_NO_SCHED
+qpost_opt_flags = OS_OPT_POST_FIFO, OS_OPT_POST_LIFO, OS_OPT_POST_NO_SCHED
+sempend_opt_flags = OS_OPT_PEND_BLOCKING, OS_OPT_PEND_NON_BLOCKING
+sempendabort_opt_flags = OS_OPT_POST_NONE, OS_OPT_POST_NO_SCHED
+sempost_opt_flags = OS_OPT_POST_NONE, OS_OPT_POST_NO_SCHED
+
+
+type OS_REG_ID      int8

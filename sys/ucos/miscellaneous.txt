@@ -1,0 +1,21 @@
+include <Source/os.h>
+
+
+BSP_OS_TickISR()
+OSCtxSw()
+OSIdleTaskHook()
+OSInit(p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSInitHook()
+OSIntCtxSw()
+OSIntEnter()
+OSIntExit()
+OSRedzoneHitHook(p_tcb ptr[in, OS_TCB])
+OSSched()
+OSSchedLock(p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSSchedUnlock(p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSStart(p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSStartHighRdy()
+OSStatReset(p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSStatTaskCPUUsageInit(p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSStatTaskHook()
+OSVersion(p_err ptr[out, const[OS_ERR_NONE, int16]]) int16
