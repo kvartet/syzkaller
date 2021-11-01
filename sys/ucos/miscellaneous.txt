@@ -1,5 +1,6 @@
 include <Source/os.h>
 
+resource os_ver_res[int16]
 
 BSP_OS_TickISR()
 OSCtxSw()
@@ -18,4 +19,4 @@ OSStartHighRdy()
 OSStatReset(p_err ptr[out, const[OS_ERR_NONE, int16]])
 OSStatTaskCPUUsageInit(p_err ptr[out, const[OS_ERR_NONE, int16]])
 OSStatTaskHook()
-OSVersion(p_err ptr[out, const[OS_ERR_NONE, int16]]) int16
+OSVersion(p_err ptr[out, const[OS_ERR_NONE, int16]]) os_ver_res

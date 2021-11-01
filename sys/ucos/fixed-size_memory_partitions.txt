@@ -1,9 +1,10 @@
 include <Source/os.h>
 
+resource os_mem_ptr_res[intptr]
 
 OSMemCreate(p_mem ptr[out, OS_MEM], p_name ptr[in, CPU_CHAR], p_addr ptr[in, void], n_blks OS_MEM_QTY, blk_size OS_MEM_SIZE, p_err ptr[out, const[OS_ERR_NONE, int16]])
-OSMemGet(p_mem ptr[in, OS_MEM], p_err ptr[out, const[OS_ERR_NONE, int16]]) ptr[in, void]
-OSMemPut(p_mem ptr[in, OS_MEM], p_blk ptr[in, void], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSMemGet(p_mem ptr[in, OS_MEM], p_err ptr[out, const[OS_ERR_NONE, int16]]) os_mem_ptr_res
+OSMemPut(p_mem ptr[in, OS_MEM], p_blk os_mem_ptr_res, p_err ptr[out, const[OS_ERR_NONE, int16]])
 
 
 type OS_MEM_QTY     int16

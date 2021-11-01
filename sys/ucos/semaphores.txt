@@ -2,10 +2,10 @@ include <Source/os.h>
 
 
 OSSemCreate(p_sem ptr[out, OS_SEM], p_name ptr[in, CPU_CHAR], cnt OS_SEM_CTR, p_err ptr[out, const[OS_ERR_NONE, int16]])
-OSSemDel(p_sem ptr[in, OS_SEM], opt flags[sem_del_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_OBJ_QTY
-OSSemPend(p_sem ptr[in, OS_SEM], timeout OS_TICK, opt flags[sem_pend_opt_flags], p_ts ptr[in, CPU_TS], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_SEM_CTR
-OSSemPendAbort(p_sem ptr[in, OS_SEM], opt flags[sem_abort_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_OBJ_QTY
-OSSemPost(p_sem ptr[in, OS_SEM], opt flags[sem_post_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_SEM_CTR
+OSSemDel(p_sem ptr[in, OS_SEM], opt flags[sem_del_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) os_obj_qty_res
+OSSemPend(p_sem ptr[in, OS_SEM], timeout OS_TICK, opt flags[sem_pend_opt_flags], p_ts ptr[in, CPU_TS], p_err ptr[out, const[OS_ERR_NONE, int16]]) sem_ctr_res
+OSSemPendAbort(p_sem ptr[in, OS_SEM], opt flags[sem_abort_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) os_obj_qty_res
+OSSemPost(p_sem ptr[in, OS_SEM], opt flags[sem_post_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) sem_ctr_res
 OSSemSet(p_sem ptr[in, OS_SEM], cnt OS_SEM_CTR, p_err ptr[out, const[OS_ERR_NONE, int16]])
 
 

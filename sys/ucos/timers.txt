@@ -1,13 +1,15 @@
 include <Source/os.h>
 
+resource tmr_state_res[OS_STATE]
+resource tmr_tf_res[CPU_BOOLEAN]
 
 OSTmrCreate(p_tmr ptr[out, OS_TMR], p_name ptr[in, CPU_CHAR], dly OS_TICK, period OS_TICK, opt flags[cret_opt_flags], p_callback OS_TMR_CALLBACK_PTR, p_callback_arg ptr[in, void], p_err ptr[out, const[OS_ERR_NONE, int16]])
-OSTmrDel(p_tmr ptr[in, OS_TMR], p_err ptr[out, const[OS_ERR_NONE, int16]]) CPU_BOOLEAN
-OSTmrRemainGet(p_tmr ptr[in, OS_TMR], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_TICK
+OSTmrDel(p_tmr ptr[in, OS_TMR], p_err ptr[out, const[OS_ERR_NONE, int16]]) tmr_tf_res
+OSTmrRemainGet(p_tmr ptr[in, OS_TMR], p_err ptr[out, const[OS_ERR_NONE, int16]]) os_tick_res
 OSTmrSet(p_tmr ptr[in, OS_TMR], dly OS_TICK, period OS_TICK, p_callback OS_TMR_CALLBACK_PTR, p_callback_arg ptr[in, void], p_err ptr[out, const[OS_ERR_NONE, int16]])
-OSTmrStart(p_tmr ptr[in, OS_TMR], p_err ptr[out, const[OS_ERR_NONE, int16]]) CPU_BOOLEAN
-OSTmrStateGet(p_tmr ptr[in, OS_TMR], p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_STATE
-OSTmrStop(p_tmr ptr[out, OS_TMR], opt flags[stop_opt_flags], p_callback_arg ptr[in, void], p_err ptr[out, const[OS_ERR_NONE, int16]]) CPU_BOOLEAN
+OSTmrStart(p_tmr ptr[in, OS_TMR], p_err ptr[out, const[OS_ERR_NONE, int16]]) tmr_tf_res
+OSTmrStateGet(p_tmr ptr[in, OS_TMR], p_err ptr[out, const[OS_ERR_NONE, int16]]) tmr_state_res
+OSTmrStop(p_tmr ptr[out, OS_TMR], opt flags[stop_opt_flags], p_callback_arg ptr[in, void], p_err ptr[out, const[OS_ERR_NONE, int16]]) tmr_tf_res
 
 
 cret_opt_flags = OS_OPT_TMR_ONE_SHOT, OS_OPT_TMR_PERIODIC
