@@ -1,17 +1,17 @@
 # # these were disabled in the default config
-# 
+#
 # include <Source/os.h>
-# 
+#
 # OS_TLS_GetID(p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_TLS_ID
 # OS_TLS_GetValue(p_tcb ptr[in, OS_TCB], id OS_TLS_ID, p_err ptr[out, const[OS_ERR_NONE, int16]]) OS_TLS
 # OS_TLS_SetDestruct(id OS_TLS_ID, p_destruct OS_TLS_DESTRUCT_PTR, p_err ptr[out, const[OS_ERR_NONE, int16]])
 # OS_TLS_SetValue(p_tcb ptr[in, OS_TCB], id OS_TLS_ID, value OS_TLS, p_err ptr[out, const[OS_ERR_NONE, int16]])
-# 
-# 
+#
+#
 # type OS_TLS_ID              int64
 # type OS_TLS                 ptr[in, void]
 # type OS_TLS_DESTRUCT_PTR    ptr[in, int64]
-# 
+#
 # type CPU_CHAR       int8
 # type OS_STATE       int8
 # type OS_PRIO        int8
@@ -33,8 +33,8 @@
 # type OS_OBJ_TYPE    int32
 # type CPU_STK_SIZE   int64
 # type OS_TASK_PTR    ptr[in, int64]
-# 
-# 
+#
+#
 # OS_TCB {
 #     StkPtr          ptr[in, CPU_STK]
 #     ExtPtr          ptr[in, void]
@@ -49,7 +49,7 @@
 #     TaskEntryArg    ptr[in, void]
 #     PendNextPtr     ptr[in, OS_TCB]
 #     PendPrevPtr     ptr[in, OS_TCB]
-#     PendObjPtr      ptr[in, OS_PEND_OBJ] 
+#     PendObjPtr      ptr[in, OS_PEND_OBJ]
 #     PendOn          OS_STATE
 #     Prio            OS_PRIO
 #     BasePrio        OS_PRIO
@@ -86,13 +86,13 @@
 #     DbgNextPtr      ptr[in, OS_TCB]
 #     DbgNamePtr      ptr[in, CPU_CHAR]
 # }
-# 
+#
 # OS_PEND_LIST {
 #     HeadPtr     ptr[in, OS_TCB]
 #     TailPtr     ptr[in, OS_TCB]
 #     NbrEntries  OS_OBJ_QTY
 # }
-# 
+#
 # OS_PEND_OBJ {
 #     Type            OS_OBJ_TYPE
 #     NamePtr         ptr[in, CPU_CHAR]
@@ -101,7 +101,7 @@
 #     DbgNextPtr      ptr[in, void]
 #     DbgNamePtr      ptr[in, CPU_CHAR]
 # }
-# 
+#
 # OS_MUTEX {
 #     Type            OS_OBJ_TYPE
 #     NamePtr         ptr[in, CPU_CHAR]
@@ -113,14 +113,14 @@
 #     OwnerTCBPtr     ptr[in, OS_TCB]
 #     OwnerNestingCtr ptr[in, OS_NESTING_CTR]
 # }
-# 
+#
 # OS_MSG_Q {
 #     InPtr           ptr[in, OS_MSG]
 #     OutPtr          ptr[in, OS_MSG]
 #     NbrEntriesSize  OS_MSG_QTY
 #     NbrEntries      OS_MSG_QTY
 # }
-# 
+#
 # OS_MSG {
 #     NextPtr         ptr[in, OS_MSG]
 #     MsgPtr          ptr[in, void]

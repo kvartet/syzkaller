@@ -7,5 +7,4 @@ Math_RandSetSeed(seed rand_nbr_res)
 Math_Rand() rand_nbr_res
 Math_RandSeed(seed rand_nbr_res) rand_nbr_res
 
-
-type RAND_NBR       int32
+type RAND_NBR int32

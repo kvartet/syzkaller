@@ -6,19 +6,17 @@ OSMemCreate(p_mem ptr[out, OS_MEM], p_name ptr[in, CPU_CHAR], p_addr ptr[in, voi
 OSMemGet(p_mem ptr[in, OS_MEM], p_err ptr[out, const[OS_ERR_NONE, int16]]) os_mem_ptr_res
 OSMemPut(p_mem ptr[in, OS_MEM], p_blk os_mem_ptr_res, p_err ptr[out, const[OS_ERR_NONE, int16]])
 
-
-type OS_MEM_QTY     int16
-type OS_MEM_SIZE    int16
-
+type OS_MEM_QTY int16
+type OS_MEM_SIZE int16
 
 OS_MEM {
-    Type            OS_OBJ_TYPE
-    NamePtr         ptr[in, CPU_CHAR]
-    AddrPtr         ptr[in, void]
-    FreeListPtr     ptr[in, void]
-    BlkSize         OS_MEM_SIZE
-    NbrMax          OS_MEM_QTY
-    NbrFree         OS_MEM_QTY
-    DbgPrevPtr      ptr[in, OS_MEM]
-    DbgNextPtr      ptr[in, OS_MEM]
+	Type		OS_OBJ_TYPE
+	NamePtr		ptr[in, CPU_CHAR]
+	AddrPtr		ptr[in, void]
+	FreeListPtr	ptr[in, void]
+	BlkSize		OS_MEM_SIZE
+	NbrMax		OS_MEM_QTY
+	NbrFree		OS_MEM_QTY
+	DbgPrevPtr	ptr[in, OS_MEM]
+	DbgNextPtr	ptr[in, OS_MEM]
 }

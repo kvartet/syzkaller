@@ -5,5 +5,4 @@
 # CPU_NameGet(p_name ptr[in, CPU_CHAR], p_err ptr[out, const[OS_ERR_NONE, int16]])
 # CPU_NameSet(p_name ptr[in, const[CPU_CHAR]], p_err ptr[out, const[OS_ERR_NONE, int16]])
 
-
 # type CPU_CHAR       int8

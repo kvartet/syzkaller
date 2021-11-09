@@ -1,27 +1,29 @@
 include <Source/os.h>
 
-resource qpend_ptr_res[intptr]
+# resource qpend_ptr_res[intptr]
 
 OSQCreate(p_q ptr[out, OS_Q], p_name ptr[in, CPU_CHAR], max_qty OS_MSG_QTY, p_err ptr[out, const[OS_ERR_NONE, int16]])
-OSQDel(p_q ptr[in, OS_Q], opt flags[q_del_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) os_obj_qty_res
-OSQFlush(p_q ptr[in, OS_Q], p_err ptr[out, const[OS_ERR_NONE, int16]]) mes_qty_res
-OSQPend(p_q ptr[in, OS_Q], timeout OS_TICK, opt flags[q_pend_opt_flags], p_msg_size ptr[in, OS_MSG_SIZE], p_ts ptr[in, CPU_TS], p_err ptr[out, const[OS_ERR_NONE, int16]]) qpend_ptr_res
-OSQPendAbort(p_q ptr[in, OS_Q], opt flags[q_abort_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) os_obj_qty_res
+OSQDel(p_q ptr[in, OS_Q], opt flags[q_del_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) (ignore_return)
+# os_obj_qty_res
+OSQFlush(p_q ptr[in, OS_Q], p_err ptr[out, const[OS_ERR_NONE, int16]]) (ignore_return)
+# mes_qty_res
+OSQPend(p_q ptr[in, OS_Q], timeout OS_TICK, opt flags[q_pend_opt_flags], p_msg_size ptr[in, OS_MSG_SIZE], p_ts ptr[in, CPU_TS], p_err ptr[out, const[OS_ERR_NONE, int16]]) (ignore_return)
+# qpend_ptr_res
+OSQPendAbort(p_q ptr[in, OS_Q], opt flags[q_abort_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) (ignore_return)
+# os_obj_qty_res
 OSQPost(p_q ptr[in, OS_Q], p_void ptr[in, void], msg_size ptr[out, OS_MSG_SIZE], opt flags[q_post_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]])
-
 
 q_del_opt_flags = OS_OPT_DEL_NO_PEND, OS_OPT_DEL_ALWAYS
 q_pend_opt_flags = OS_OPT_PEND_BLOCKING, OS_OPT_PEND_NON_BLOCKING
 q_abort_opt_flags = OS_OPT_PEND_ABORT_1, OS_OPT_PEND_ABORT_ALL, OS_OPT_POST_NO_SCHED
 q_post_opt_flags = OS_OPT_POST_FIFO, OS_OPT_POST_LIFO, OS_OPT_POST_ALL, OS_OPT_POST_NO_SCHED
 
-
 OS_Q {
-    Type            OS_OBJ_TYPE
-    NamePtr         ptr[in, CPU_CHAR]
-    PendList        OS_PEND_LIST
-    DbgPrevPtr      ptr[in, OS_Q]
-    DbgNextPtr      ptr[in, OS_Q]
-    DbgNamePtr      ptr[in, CPU_CHAR]
-    MsgQ            OS_MSG_Q
+	Type		OS_OBJ_TYPE
+	NamePtr		ptr[in, CPU_CHAR]
+	PendList	OS_PEND_LIST
+	DbgPrevPtr	ptr[in, OS_Q]
+	DbgNextPtr	ptr[in, OS_Q]
+	DbgNamePtr	ptr[in, CPU_CHAR]
+	MsgQ		OS_MSG_Q
 }
