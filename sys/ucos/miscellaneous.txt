@@ -10,7 +10,7 @@ OSInitHook()
 OSIntCtxSw()
 OSIntEnter()
 OSIntExit()
-OSRedzoneHitHook(p_tcb ptr[in, OS_TCB])
+OSRedzoneHitHook(p_tcb ptr[in, os_tcb_res])
 OSSched()
 OSSchedLock(p_err ptr[out, const[OS_ERR_NONE, int16]])
 OSSchedUnlock(p_err ptr[out, const[OS_ERR_NONE, int16]])
@@ -21,3 +21,5 @@ OSStatTaskCPUUsageInit(p_err ptr[out, const[OS_ERR_NONE, int16]])
 OSStatTaskHook()
 OSVersion(p_err ptr[out, const[OS_ERR_NONE, int16]]) (ignore_return)
 # os_ver_res
+
+resource os_tcb_res[intptr]

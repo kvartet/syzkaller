@@ -4,7 +4,7 @@ include <Source/os.h>
 
 OSTimeDly(dly OS_TICK, opt flags[dly_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]])
 OSTimeDlyHMSM(hours int16[0:999], minutes int16[0:9999], seconds int16, milli int32, opt flags[dlyhmsm_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]])
-OSTimeDlyResume(p_tcb ptr[in, OS_TCB], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTimeDlyResume(p_tcb ptr[in, os_tcb_res], p_err ptr[out, const[OS_ERR_NONE, int16]])
 OSTimeGet(p_err ptr[out, const[OS_ERR_NONE, int16]]) os_tick_res
 OSTimeSet(ticks OS_TICK, p_err ptr[out, const[OS_ERR_NONE, int16]])
 OSTimeTick()

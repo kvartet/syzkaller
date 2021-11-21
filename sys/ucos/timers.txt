@@ -3,16 +3,16 @@ include <Source/os.h>
 # resource tmr_state_res[OS_STATE]
 # resource tmr_tf_res[CPU_BOOLEAN]
 
-OSTmrCreate(p_tmr ptr[out, OS_TMR], p_name ptr[in, CPU_CHAR], dly OS_TICK, period OS_TICK, opt flags[cret_opt_flags], p_callback OS_TMR_CALLBACK_PTR, p_callback_arg ptr[in, void], p_err ptr[out, const[OS_ERR_NONE, int16]])
-OSTmrDel(p_tmr ptr[in, OS_TMR], p_err ptr[out, const[OS_ERR_NONE, int16]]) (ignore_return)
+OSTmrCreate(p_tmr ptr[out, os_tmr_res], p_name ptr[in, CPU_CHAR], dly OS_TICK, period OS_TICK, opt flags[cret_opt_flags], p_callback OS_TMR_CALLBACK_PTR, p_callback_arg ptr[in, void], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTmrDel(p_tmr ptr[in, os_tmr_res], p_err ptr[out, const[OS_ERR_NONE, int16]]) (ignore_return)
 # tmr_tf_res
-OSTmrRemainGet(p_tmr ptr[in, OS_TMR], p_err ptr[out, const[OS_ERR_NONE, int16]]) os_tick_res
-OSTmrSet(p_tmr ptr[in, OS_TMR], dly OS_TICK, period OS_TICK, p_callback OS_TMR_CALLBACK_PTR, p_callback_arg ptr[in, void], p_err ptr[out, const[OS_ERR_NONE, int16]])
-OSTmrStart(p_tmr ptr[in, OS_TMR], p_err ptr[out, const[OS_ERR_NONE, int16]]) (ignore_return)
+OSTmrRemainGet(p_tmr ptr[in, os_tmr_res], p_err ptr[out, const[OS_ERR_NONE, int16]]) os_tick_res
+OSTmrSet(p_tmr ptr[in, os_tmr_res], dly OS_TICK, period OS_TICK, p_callback OS_TMR_CALLBACK_PTR, p_callback_arg ptr[in, void], p_err ptr[out, const[OS_ERR_NONE, int16]])
+OSTmrStart(p_tmr ptr[in, os_tmr_res], p_err ptr[out, const[OS_ERR_NONE, int16]]) (ignore_return)
 # tmr_tf_res
-OSTmrStateGet(p_tmr ptr[in, OS_TMR], p_err ptr[out, const[OS_ERR_NONE, int16]]) (ignore_return)
+OSTmrStateGet(p_tmr ptr[in, os_tmr_res], p_err ptr[out, const[OS_ERR_NONE, int16]]) (ignore_return)
 # tmr_state_res
-OSTmrStop(p_tmr ptr[out, OS_TMR], opt flags[stop_opt_flags], p_callback_arg ptr[in, void], p_err ptr[out, const[OS_ERR_NONE, int16]]) (ignore_return)
+OSTmrStop(p_tmr ptr[out, os_tmr_res], opt flags[stop_opt_flags], p_callback_arg ptr[in, void], p_err ptr[out, const[OS_ERR_NONE, int16]]) (ignore_return)
 # tmr_tf_res
 
 cret_opt_flags = OS_OPT_TMR_ONE_SHOT, OS_OPT_TMR_PERIODIC
@@ -20,18 +20,4 @@ stop_opt_flags = OS_OPT_TMR_NONE, OS_OPT_TMR_CALLBACK, OS_OPT_TMR_CALLBACK_ARG
 
 type OS_TMR_CALLBACK_PTR ptr[in, int64]
 
-OS_TMR {
-	Type		OS_OBJ_TYPE
-	NamePtr		ptr[in, CPU_CHAR]
-	CallbackPtr	OS_TMR_CALLBACK_PTR
-	CallbackPtrArg	ptr[in, void]
-	NextPtr		ptr[in, OS_TMR]
-	PrevPtr		ptr[in, OS_TMR]
-	Remain		OS_TICK
-	Dly		OS_TICK
-	Period		OS_TICK
-	Opt		OS_OPT
-	State		OS_STATE
-	DbgPrevPtr	ptr[in, OS_TMR]
-	DbgNextPtr	ptr[in, OS_TMR]
-}
+resource os_tmr_res[intptr]
