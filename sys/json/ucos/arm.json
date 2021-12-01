@@ -375,13 +375,48 @@
         {
             "ID": 0,
             "NR": 0,
+            "Name": "Mem_Copy$res",
+            "CallName": "Mem_Copy",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "pdest",
+                    "Type": 71,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "psrc",
+                    "Type": 37,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "size",
+                    "Type": 33,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": null,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": false,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
             "Name": "Mem_DynPoolBlkFree",
             "CallName": "Mem_DynPoolBlkFree",
             "MissingArgs": 0,
             "Args": [
                 {
                     "Name": "p_pool",
-                    "Type": 46,
+                    "Type": 47,
                     "HasDirection": false,
                     "Direction": 0
                 },
@@ -416,7 +451,7 @@
             "Args": [
                 {
                     "Name": "p_pool",
-                    "Type": 46,
+                    "Type": 47,
                     "HasDirection": false,
                     "Direction": 0
                 },
@@ -445,7 +480,7 @@
             "Args": [
                 {
                     "Name": "p_pool",
-                    "Type": 46,
+                    "Type": 47,
                     "HasDirection": false,
                     "Direction": 0
                 },
@@ -480,7 +515,7 @@
                 },
                 {
                     "Name": "p_pool",
-                    "Type": 61,
+                    "Type": 62,
                     "HasDirection": false,
                     "Direction": 0
                 },
@@ -545,7 +580,7 @@
                 },
                 {
                     "Name": "p_pool",
-                    "Type": 61,
+                    "Type": 62,
                     "HasDirection": false,
                     "Direction": 0
                 },
@@ -621,6 +656,41 @@
                 {
                     "Name": "pdest",
                     "Type": 37,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "psrc",
+                    "Type": 37,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "size",
+                    "Type": 33,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": null,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": false,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
+            "Name": "Mem_Move$res",
+            "CallName": "Mem_Move",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "pdest",
+                    "Type": 71,
                     "HasDirection": false,
                     "Direction": 0
                 },
@@ -1106,6 +1176,41 @@
         {
             "ID": 0,
             "NR": 0,
+            "Name": "Mem_Set$res",
+            "CallName": "Mem_Set",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "pmem",
+                    "Type": 71,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "data_val",
+                    "Type": 36,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "size",
+                    "Type": 33,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": null,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": false,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
             "Name": "OSCtxSw",
             "CallName": "OSCtxSw",
             "MissingArgs": 0,
@@ -1344,6 +1449,47 @@
                 "Timeout": 0,
                 "ProgTimeout": 0,
                 "IgnoreReturn": false,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
+            "Name": "OSFlagPost$res",
+            "CallName": "OSFlagPost",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "p_grp",
+                    "Type": 41,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "flags",
+                    "Type": 74,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "opt",
+                    "Type": 13,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "p_err",
+                    "Type": 57,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": null,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": true,
                 "BreaksReturns": false
             }
         },
@@ -1763,7 +1909,7 @@
             "Args": [
                 {
                     "Name": "p_q",
-                    "Type": 62,
+                    "Type": 61,
                     "HasDirection": false,
                     "Direction": 0
                 },
@@ -1804,7 +1950,7 @@
             "Args": [
                 {
                     "Name": "p_q",
-                    "Type": 47,
+                    "Type": 46,
                     "HasDirection": false,
                     "Direction": 0
                 },
@@ -1839,7 +1985,7 @@
             "Args": [
                 {
                     "Name": "p_q",
-                    "Type": 47,
+                    "Type": 46,
                     "HasDirection": false,
                     "Direction": 0
                 },
@@ -1868,7 +2014,7 @@
             "Args": [
                 {
                     "Name": "p_q",
-                    "Type": 47,
+                    "Type": 46,
                     "HasDirection": false,
                     "Direction": 0
                 },
@@ -1921,7 +2067,7 @@
             "Args": [
                 {
                     "Name": "p_q",
-                    "Type": 47,
+                    "Type": 46,
                     "HasDirection": false,
                     "Direction": 0
                 },
@@ -1956,7 +2102,7 @@
             "Args": [
                 {
                     "Name": "p_q",
-                    "Type": 47,
+                    "Type": 46,
                     "HasDirection": false,
                     "Direction": 0
                 },
@@ -3893,6 +4039,64 @@
         {
             "ID": 0,
             "NR": 0,
+            "Name": "Str_Cat$res",
+            "CallName": "Str_Cat",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "pstr_dest",
+                    "Type": 52,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "pstr_cat",
+                    "Type": 85,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": 85,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": false,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
+            "Name": "Str_Cat$res1",
+            "CallName": "Str_Cat",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "pstr_dest",
+                    "Type": 85,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "pstr_cat",
+                    "Type": 52,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": 85,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": false,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
             "Name": "Str_Cat_N",
             "CallName": "Str_Cat_N",
             "MissingArgs": 0,
@@ -3928,6 +4132,76 @@
         {
             "ID": 0,
             "NR": 0,
+            "Name": "Str_Cat_N$res",
+            "CallName": "Str_Cat_N",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "pstr_dest",
+                    "Type": 52,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "pstr_cat",
+                    "Type": 85,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "len_max",
+                    "Type": 33,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": 85,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": false,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
+            "Name": "Str_Cat_N$res1",
+            "CallName": "Str_Cat_N",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "pstr_dest",
+                    "Type": 85,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "pstr_cat",
+                    "Type": 52,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "len_max",
+                    "Type": 33,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": 85,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": false,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
             "Name": "Str_Char",
             "CallName": "Str_Char",
             "MissingArgs": 0,
@@ -3935,6 +4209,35 @@
                 {
                     "Name": "pstr",
                     "Type": 52,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "srch_char",
+                    "Type": 36,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": 85,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": false,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
+            "Name": "Str_Char$res",
+            "CallName": "Str_Char",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "pstr",
+                    "Type": 85,
                     "HasDirection": false,
                     "Direction": 0
                 },
@@ -4161,6 +4464,64 @@
         {
             "ID": 0,
             "NR": 0,
+            "Name": "Str_Cmp$res",
+            "CallName": "Str_Cmp",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "p1_str",
+                    "Type": 52,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "p2_str",
+                    "Type": 85,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": null,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": true,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
+            "Name": "Str_Cmp$res1",
+            "CallName": "Str_Cmp",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "p1_str",
+                    "Type": 85,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "p2_str",
+                    "Type": 52,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": null,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": true,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
             "Name": "Str_CmpIgnoreCase",
             "CallName": "Str_CmpIgnoreCase",
             "MissingArgs": 0,
@@ -4190,6 +4551,64 @@
         {
             "ID": 0,
             "NR": 0,
+            "Name": "Str_CmpIgnoreCase$res",
+            "CallName": "Str_CmpIgnoreCase",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "p1_str",
+                    "Type": 52,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "p2_str",
+                    "Type": 85,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": null,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": true,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
+            "Name": "Str_CmpIgnoreCase$res1",
+            "CallName": "Str_CmpIgnoreCase",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "p1_str",
+                    "Type": 85,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "p2_str",
+                    "Type": 52,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": null,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": true,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
             "Name": "Str_CmpIgnoreCase_N",
             "CallName": "Str_CmpIgnoreCase_N",
             "MissingArgs": 0,
@@ -4197,6 +4616,76 @@
                 {
                     "Name": "p1_str",
                     "Type": 52,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "p2_str",
+                    "Type": 52,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "len_max",
+                    "Type": 33,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": null,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": true,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
+            "Name": "Str_CmpIgnoreCase_N$res",
+            "CallName": "Str_CmpIgnoreCase_N",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "p1_str",
+                    "Type": 52,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "p2_str",
+                    "Type": 85,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "len_max",
+                    "Type": 33,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": null,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": true,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
+            "Name": "Str_CmpIgnoreCase_N$res1",
+            "CallName": "Str_CmpIgnoreCase_N",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "p1_str",
+                    "Type": 85,
                     "HasDirection": false,
                     "Direction": 0
                 },
@@ -4260,6 +4749,76 @@
         {
             "ID": 0,
             "NR": 0,
+            "Name": "Str_Cmp_N$res",
+            "CallName": "Str_Cmp_N",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "p1_str",
+                    "Type": 52,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "p2_str",
+                    "Type": 85,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "len_max",
+                    "Type": 33,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": null,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": true,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
+            "Name": "Str_Cmp_N$res1",
+            "CallName": "Str_Cmp_N",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "p1_str",
+                    "Type": 85,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "p2_str",
+                    "Type": 52,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "len_max",
+                    "Type": 33,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": null,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": true,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
             "Name": "Str_Copy",
             "CallName": "Str_Copy",
             "MissingArgs": 0,
@@ -4289,6 +4848,35 @@
         {
             "ID": 0,
             "NR": 0,
+            "Name": "Str_Copy$res",
+            "CallName": "Str_Copy",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "pstr_dest",
+                    "Type": 67,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "pstr_src",
+                    "Type": 85,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": 85,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": false,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
             "Name": "Str_Copy_N",
             "CallName": "Str_Copy_N",
             "MissingArgs": 0,
@@ -4302,6 +4890,41 @@
                 {
                     "Name": "pstr_src",
                     "Type": 52,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "len_max",
+                    "Type": 33,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": 85,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": false,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
+            "Name": "Str_Copy_N$res",
+            "CallName": "Str_Copy_N",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "pstr_dest",
+                    "Type": 67,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "pstr_src",
+                    "Type": 85,
                     "HasDirection": false,
                     "Direction": 0
                 },
@@ -4593,6 +5216,64 @@
         {
             "ID": 0,
             "NR": 0,
+            "Name": "Str_Str$res",
+            "CallName": "Str_Str",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "pstr",
+                    "Type": 52,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "pstr_srch",
+                    "Type": 85,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": 85,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": false,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
+            "Name": "Str_Str$res1",
+            "CallName": "Str_Str",
+            "MissingArgs": 0,
+            "Args": [
+                {
+                    "Name": "pstr",
+                    "Type": 85,
+                    "HasDirection": false,
+                    "Direction": 0
+                },
+                {
+                    "Name": "pstr_srch",
+                    "Type": 52,
+                    "HasDirection": false,
+                    "Direction": 0
+                }
+            ],
+            "Ret": 85,
+            "Attrs": {
+                "Disabled": false,
+                "Timeout": 0,
+                "ProgTimeout": 0,
+                "IgnoreReturn": false,
+                "BreaksReturns": false
+            }
+        },
+        {
+            "ID": 0,
+            "NR": 0,
             "Name": "Str_Str_N",
             "CallName": "Str_Str_N",
             "MissingArgs": 0,
@@ -4628,469 +5309,9 @@
         {
             "ID": 0,
             "NR": 0,
-            "Name": "res$Mem_Copy",
-            "CallName": "res",
-            "MissingArgs": 1,
-            "Args": [
-                {
-                    "Name": "pdest",
-                    "Type": 71,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "psrc",
-                    "Type": 37,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "size",
-                    "Type": 33,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": null,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": false,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res$Mem_Move",
-            "CallName": "res",
-            "MissingArgs": 1,
-            "Args": [
-                {
-                    "Name": "pdest",
-                    "Type": 71,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "psrc",
-                    "Type": 37,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "size",
-                    "Type": 33,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": null,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": false,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res$Mem_Set",
-            "CallName": "res",
-            "MissingArgs": 1,
-            "Args": [
-                {
-                    "Name": "pmem",
-                    "Type": 71,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "data_val",
-                    "Type": 36,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "size",
-                    "Type": 33,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": null,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": false,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res$OSFlagPost",
-            "CallName": "res",
+            "Name": "Str_Str_N$res",
+            "CallName": "Str_Str_N",
             "MissingArgs": 0,
-            "Args": [
-                {
-                    "Name": "p_grp",
-                    "Type": 41,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "flags",
-                    "Type": 74,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "opt",
-                    "Type": 13,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "p_err",
-                    "Type": 57,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": null,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": true,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res$Str_Cat",
-            "CallName": "res",
-            "MissingArgs": 2,
-            "Args": [
-                {
-                    "Name": "pstr_dest",
-                    "Type": 52,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "pstr_cat",
-                    "Type": 85,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": 85,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": false,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res$Str_Cat_N",
-            "CallName": "res",
-            "MissingArgs": 1,
-            "Args": [
-                {
-                    "Name": "pstr_dest",
-                    "Type": 52,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "pstr_cat",
-                    "Type": 85,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "len_max",
-                    "Type": 33,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": 85,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": false,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res$Str_Char",
-            "CallName": "res",
-            "MissingArgs": 2,
-            "Args": [
-                {
-                    "Name": "pstr",
-                    "Type": 85,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "srch_char",
-                    "Type": 36,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": 85,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": false,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res$Str_Cmp",
-            "CallName": "res",
-            "MissingArgs": 2,
-            "Args": [
-                {
-                    "Name": "p1_str",
-                    "Type": 52,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "p2_str",
-                    "Type": 85,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": null,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": true,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res$Str_CmpIgnoreCase",
-            "CallName": "res",
-            "MissingArgs": 2,
-            "Args": [
-                {
-                    "Name": "p1_str",
-                    "Type": 52,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "p2_str",
-                    "Type": 85,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": null,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": true,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res$Str_CmpIgnoreCase_N",
-            "CallName": "res",
-            "MissingArgs": 1,
-            "Args": [
-                {
-                    "Name": "p1_str",
-                    "Type": 52,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "p2_str",
-                    "Type": 85,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "len_max",
-                    "Type": 33,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": null,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": true,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res$Str_Cmp_N",
-            "CallName": "res",
-            "MissingArgs": 1,
-            "Args": [
-                {
-                    "Name": "p1_str",
-                    "Type": 52,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "p2_str",
-                    "Type": 85,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "len_max",
-                    "Type": 33,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": null,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": true,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res$Str_Copy",
-            "CallName": "res",
-            "MissingArgs": 2,
-            "Args": [
-                {
-                    "Name": "pstr_dest",
-                    "Type": 67,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "pstr_src",
-                    "Type": 85,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": 85,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": false,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res$Str_Copy_N",
-            "CallName": "res",
-            "MissingArgs": 1,
-            "Args": [
-                {
-                    "Name": "pstr_dest",
-                    "Type": 67,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "pstr_src",
-                    "Type": 85,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "len_max",
-                    "Type": 33,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": 85,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": false,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res$Str_Str",
-            "CallName": "res",
-            "MissingArgs": 2,
-            "Args": [
-                {
-                    "Name": "pstr",
-                    "Type": 52,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "pstr_srch",
-                    "Type": 85,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": 85,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": false,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res$Str_Str_N",
-            "CallName": "res",
-            "MissingArgs": 1,
             "Args": [
                 {
                     "Name": "pstr",
@@ -5123,229 +5344,8 @@
         {
             "ID": 0,
             "NR": 0,
-            "Name": "res1$Str_Cat",
-            "CallName": "res1",
-            "MissingArgs": 1,
-            "Args": [
-                {
-                    "Name": "pstr_dest",
-                    "Type": 85,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "pstr_cat",
-                    "Type": 52,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": 85,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": false,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res1$Str_Cat_N",
-            "CallName": "res1",
-            "MissingArgs": 0,
-            "Args": [
-                {
-                    "Name": "pstr_dest",
-                    "Type": 85,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "pstr_cat",
-                    "Type": 52,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "len_max",
-                    "Type": 33,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": 85,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": false,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res1$Str_Cmp",
-            "CallName": "res1",
-            "MissingArgs": 1,
-            "Args": [
-                {
-                    "Name": "p1_str",
-                    "Type": 85,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "p2_str",
-                    "Type": 52,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": null,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": true,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res1$Str_CmpIgnoreCase",
-            "CallName": "res1",
-            "MissingArgs": 1,
-            "Args": [
-                {
-                    "Name": "p1_str",
-                    "Type": 85,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "p2_str",
-                    "Type": 52,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": null,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": true,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res1$Str_CmpIgnoreCase_N",
-            "CallName": "res1",
-            "MissingArgs": 0,
-            "Args": [
-                {
-                    "Name": "p1_str",
-                    "Type": 85,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "p2_str",
-                    "Type": 52,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "len_max",
-                    "Type": 33,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": null,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": true,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res1$Str_Cmp_N",
-            "CallName": "res1",
-            "MissingArgs": 0,
-            "Args": [
-                {
-                    "Name": "p1_str",
-                    "Type": 85,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "p2_str",
-                    "Type": 52,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "len_max",
-                    "Type": 33,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": null,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": true,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res1$Str_Str",
-            "CallName": "res1",
-            "MissingArgs": 1,
-            "Args": [
-                {
-                    "Name": "pstr",
-                    "Type": 85,
-                    "HasDirection": false,
-                    "Direction": 0
-                },
-                {
-                    "Name": "pstr_srch",
-                    "Type": 52,
-                    "HasDirection": false,
-                    "Direction": 0
-                }
-            ],
-            "Ret": 85,
-            "Attrs": {
-                "Disabled": false,
-                "Timeout": 0,
-                "ProgTimeout": 0,
-                "IgnoreReturn": false,
-                "BreaksReturns": false
-            }
-        },
-        {
-            "ID": 0,
-            "NR": 0,
-            "Name": "res1$Str_Str_N",
-            "CallName": "res1",
+            "Name": "Str_Str_N$res1",
+            "CallName": "Str_Str_N",
             "MissingArgs": 0,
             "Args": [
                 {
@@ -6242,7 +6242,7 @@
                 "TypeAlign": 4,
                 "IsOptional": false,
                 "IsVarlen": false,
-                "Elem": 69,
+                "Elem": 78,
                 "ElemDir": 0
             }
         },
@@ -6254,7 +6254,7 @@
                 "TypeAlign": 4,
                 "IsOptional": false,
                 "IsVarlen": false,
-                "Elem": 78,
+                "Elem": 69,
                 "ElemDir": 0
             }
         },
@@ -6422,7 +6422,7 @@
                 "TypeAlign": 4,
                 "IsOptional": false,
                 "IsVarlen": false,
-                "Elem": 69,
+                "Elem": 78,
                 "ElemDir": 1
             }
         },
@@ -6434,7 +6434,7 @@
                 "TypeAlign": 4,
                 "IsOptional": false,
                 "IsVarlen": false,
-                "Elem": 78,
+                "Elem": 69,
                 "ElemDir": 1
             }
         },
@@ -6899,7 +6899,6 @@
     ],
     "Consts": {
         "LIB_MEM_ERR_NONE": 10000,
-        "OS_CFG_TASK_REG_TBL_SIZE": 1,
         "OS_ERR_NONE": 0,
         "OS_OPT_DEL_ALWAYS": 1,
         "OS_OPT_DEL_NO_PEND": 0,
@@ -6937,5 +6936,5 @@
         "OS_OPT_TMR_ONE_SHOT": 1,
         "OS_OPT_TMR_PERIODIC": 2
     },
-    "Revision": "29df8baeb9417206a65b7090bfce9a944defb3c5"
+    "Revision": "b52877c091d4c9364c85b53f149b1fcf32857018"
 }

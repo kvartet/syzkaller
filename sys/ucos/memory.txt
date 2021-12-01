@@ -35,14 +35,14 @@ Mem_DynPoolBlkNbrAvailGet(p_pool ptr[in, mem_dyn_pool_res], perr ptr[out, const[
 # Mem_HeapAlloc(size CPU_SIZE_T, align CPU_SIZE_T, p_bytes_reqd ptr[in, CPU_SIZE_T], p_err ptr[out, const[LIB_MEM_ERR_NONE, int16]]) mem_ptr_res
 # Mem_HeapGetSizeRem(align CPU_SIZE_T, p_err ptr[out, const[LIB_MEM_ERR_NONE, int16]]) mem_rem_res
 
-res$Mem_Set(pmem mem_ptr_res, data_val int8, size CPU_SIZE_T)
-res$Mem_Copy(pdest mem_ptr_res, psrc ptr[in, void], size CPU_SIZE_T)
-res$Mem_Move(pdest mem_ptr_res, psrc ptr[in, void], size CPU_SIZE_T)
+Mem_Set$res(pmem mem_ptr_res, data_val int8, size CPU_SIZE_T)
+Mem_Copy$res(pdest mem_ptr_res, psrc ptr[in, void], size CPU_SIZE_T)
+Mem_Move$res(pdest mem_ptr_res, psrc ptr[in, void], size CPU_SIZE_T)
 
 type CPU_BOOLEAN int8[0:1]
 type CPU_SIZE_T int32
 type MEM_POOL_BLK_QTY int32
 
 resource mem_seg_res[intptr]
-resource mem_dyn_pool_res[intptr]
 resource mem_pool_res[intptr]
+resource mem_dyn_pool_res[intptr]

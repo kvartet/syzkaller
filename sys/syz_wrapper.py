@@ -1,6 +1,7 @@
 import re
 import os
 import argparse
+import json
 from typing import Any
 
 
@@ -69,6 +70,16 @@ def write_mapping(path) -> None:
         write_file(path, '{"' + item[0] + '", ' + str(0) + ', "' + item[1] +
                    '", (struct_t)' + item[1] + '},\n', 'a+')
 
+def convert_json(src, des):
+    with open(src, 'r') as f:
+        text = eval(f.read())
+    mapping_dict = dict()
+    for item in text:
+        if item[0] in mapping_dict.keys():
+            mapping_dict[item[0]].append([item[1], item[2]])
+        else:
+            mapping_dict[item[0]] = [[item[1], item[2]]]
+    write_file(des, json.dumps(mapping_dict))
 
 def extract_struct(path) -> None:
     pattern = '(?P<struct_name>[a-zA-Z_\$]*)\s*{'
@@ -92,12 +103,11 @@ def main():
         des = os.path.join(args.target_dir, os.path.basename(src))
         write_file(des, text)
     write_mapping(os.path.join(args.target_dir, args.mapping_file))
-    
+
 
 
 if __name__ == "__main__":
     # main()
-    text = parse_file("ucos/str.txt")
-    print(text)
+    convert_json('ucos/mapping.h', 'mapping.json')
     # des = os.path.join(args.target_dir, os.path.basename(src))
     # write_file(des, text)

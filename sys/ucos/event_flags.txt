@@ -12,7 +12,7 @@ OSFlagPendAbort(p_grp ptr[in, os_flag_grp_res], opt flags[abort_opt_flags], p_er
 OSFlagPendGetFlagsRdy(p_err ptr[out, const[OS_ERR_NONE, int16]]) os_flags_res
 OSFlagPost(p_grp ptr[in, os_flag_grp_res], flags OS_FLAGS, opt flags[post_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) os_flags_res
 
-res$OSFlagPost(p_grp ptr[in, os_flag_grp_res], flags os_flags_res, opt flags[post_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) (ignore_return)
+OSFlagPost$res(p_grp ptr[in, os_flag_grp_res], flags os_flags_res, opt flags[post_opt_flags], p_err ptr[out, const[OS_ERR_NONE, int16]]) (ignore_return)
 
 del_opt_flags = OS_OPT_DEL_NO_PEND, OS_OPT_DEL_ALWAYS
 pend_opt_flags = OS_OPT_PEND_FLAG_CLR_ALL, OS_OPT_PEND_FLAG_CLR_ANY, OS_OPT_PEND_FLAG_SET_ALL, OS_OPT_PEND_FLAG_SET_ANY, OS_OPT_PEND_FLAG_CONSUME, OS_OPT_PEND_BLOCKING, OS_OPT_PEND_NON_BLOCKING
