@@ -199,8 +199,8 @@ NetIF_TxSuspendTimeoutGet_ms(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NON
 # CPU_INT32U
 NetIF_ISR_Handler(if_nbr NET_IF_NBR, type flags[net_dev_isr_type_flags], p_err ptr[out, const[NET_ERR_NONE, int16]])
 NetIF_RxTaskSignal(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetIF_DevCfgTxRdySignal(p_if ptr[in, NET_IF], cnt CPU_INT16U, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetIF_DevTxRdySignal(p_if ptr[in, NET_IF])
+NetIF_DevCfgTxRdySignal(p_if ptr[in, net_if_res], cnt CPU_INT16U, p_err ptr[out, const[NET_ERR_NONE, int16]])
+NetIF_DevTxRdySignal(p_if ptr[in, net_if_res])
 NetIF_TxDeallocTaskPost(p_buf_data ptr[in, CPU_INT08U], p_err ptr[out, const[NET_ERR_NONE, int16]])
 
 net_dev_isr_type_flags = NET_DEV_ISR_TYPE_NONE, NET_DEV_ISR_TYPE_UNKNOWN, NET_DEV_ISR_TYPE_RX, NET_DEV_ISR_TYPE_RX_RUNT, NET_DEV_ISR_TYPE_RX_OVERRUN, NET_DEV_ISR_TYPE_TX_RDY, NET_DEV_ISR_TYPE_TX_COMPLETE, NET_DEV_ISR_TYPE_TX_COLLISION_LATE, NET_DEV_ISR_TYPE_TX_COLLISION_EXCESS, NET_DEV_ISR_TYPE_JABBER, NET_DEV_ISR_TYPE_BABBLE, NET_DEV_ISR_TYPE_PHY, NET_DEV_ISR_TYPE_TX_DONE
@@ -632,45 +632,33 @@ addrinfo {
 # can't find Wireless Device BSP Functions and Ethernet Device BSP Functions'
 
 # static method in Dev/Ether/MACNet/net_dev_macnet.c
-NetDev_Init(pif ptr[out, NET_IF])
-NetDev_Start(pif ptr[in, NET_IF])
-NetDev_Stop(pif ptr[in, NET_IF])
-NetDev_Rx(pif ptr[in, NET_IF], p_data ptr[in, ptr[in, CPU_INT08U]], size ptr[in, CPU_INT16U])
-NetDev_Tx(pif ptr[in, NET_IF], p_data ptr[in, CPU_INT08U], size CPU_INT16U)
-NetDev_AddrMulticastAdd(pif ptr[in, NET_IF], paddr_hw ptr[in, CPU_INT08U], addr_hw_len CPU_INT08U)
-NetDev_AddrMulticastRemove(pif ptr[in, NET_IF], paddr_hw ptr[in, CPU_INT08U], addr_hw_len CPU_INT08U)
-NetDev_ISR_Handler(pif ptr[in, NET_IF], type flags[net_dev_isr_type_flags])
-NetDev_IO_Ctrl(pif ptr[in, NET_IF], opt CPU_INT08U, p_data ptr[in, void])
-NetDev_MII_Rd(pif ptr[in, NET_IF], phy_addr CPU_INT08U, reg_addr CPU_INT08U, p_data ptr[in, CPU_INT16U])
-NetDev_MII_Wr(pif ptr[in, NET_IF], phy_addr CPU_INT08U, reg_addr CPU_INT08U, data CPU_INT16U)
-NetDev_RxDescInit(pif ptr[in, NET_IF])
-NetDev_RxDescFreeAll(pif ptr[in, NET_IF])
-NetDev_RxDescPtrCurInc(pif ptr[in, NET_IF])
-NetDev_TxDescInit(pif ptr[in, NET_IF])
+NetDev_Init(pif ptr[out, net_if_res])
+NetDev_Start(pif ptr[in, net_if_res])
+NetDev_Stop(pif ptr[in, net_if_res])
+NetDev_Rx(pif ptr[in, net_if_res], p_data ptr[in, ptr[in, CPU_INT08U]], size ptr[in, CPU_INT16U])
+NetDev_Tx(pif ptr[in, net_if_res], p_data ptr[in, CPU_INT08U], size CPU_INT16U)
+NetDev_AddrMulticastAdd(pif ptr[in, net_if_res], paddr_hw ptr[in, CPU_INT08U], addr_hw_len CPU_INT08U)
+NetDev_AddrMulticastRemove(pif ptr[in, net_if_res], paddr_hw ptr[in, CPU_INT08U], addr_hw_len CPU_INT08U)
+NetDev_ISR_Handler(pif ptr[in, net_if_res], type flags[net_dev_isr_type_flags])
+NetDev_IO_Ctrl(pif ptr[in, net_if_res], opt CPU_INT08U, p_data ptr[in, void])
+NetDev_MII_Rd(pif ptr[in, net_if_res], phy_addr CPU_INT08U, reg_addr CPU_INT08U, p_data ptr[in, CPU_INT16U])
+NetDev_MII_Wr(pif ptr[in, net_if_res], phy_addr CPU_INT08U, reg_addr CPU_INT08U, data CPU_INT16U)
+NetDev_RxDescInit(pif ptr[in, net_if_res])
+NetDev_RxDescFreeAll(pif ptr[in, net_if_res])
+NetDev_RxDescPtrCurInc(pif ptr[in, net_if_res])
+NetDev_TxDescInit(pif ptr[in, net_if_res])
 
 # static method inDev/Ether/PHY/Generic/net_phy.c
-NetPhy_Init(pif ptr[out, NET_IF])
-NetPhy_EnDis(pif ptr[in, NET_IF], en CPU_BOOLEAN)
-NetPhy_LinkStateGet(pif ptr[in, NET_IF], plink_state ptr[in, NET_DEV_LINK_ETHER])
-NetPhy_LinkStateSet(pif ptr[in, NET_IF], plink_state ptr[in, NET_DEV_LINK_ETHER])
-NetPhy_AutoNegStart(pif ptr[in, NET_IF])
-NetPhy_AddrProbe(pif ptr[in, NET_IF])
+NetPhy_Init(pif ptr[out, net_if_res])
+NetPhy_EnDis(pif ptr[in, net_if_res], en CPU_BOOLEAN)
+NetPhy_LinkStateGet(pif ptr[in, net_if_res], plink_state ptr[in, NET_DEV_LINK_ETHER])
+NetPhy_LinkStateSet(pif ptr[in, net_if_res], plink_state ptr[in, NET_DEV_LINK_ETHER])
+NetPhy_AutoNegStart(pif ptr[in, net_if_res])
+NetPhy_AddrProbe(pif ptr[in, net_if_res])
 
-# net_dev_isr_type_flags = NET_DEV_ISR_TYPE_NONE,NET_DEV_ISR_TYPE_UNKNOWN,NET_DEV_ISR_TYPE_RX,NET_DEV_ISR_TYPE_RX_RUNT,NET_DEV_ISR_TYPE_RX_OVERRUN,NET_DEV_ISR_TYPE_TX_RDY,NET_DEV_ISR_TYPE_TX_COMPLETE,NET_DEV_ISR_TYPE_TX_COLLISION_LATE,NET_DEV_ISR_TYPE_TX_COLLISION_EXCESS,NET_DEV_ISR_TYPE_JABBER,NET_DEV_ISR_TYPE_BABBLE,NET_DEV_ISR_TYPE_PHY,NET_DEV_ISR_TYPE_TX_DONE
-net_if_type_flags = NET_IF_TYPE_NONE, NET_IF_TYPE_LOOPBACK, NET_IF_TYPE_SERIAL, NET_IF_TYPE_PPP, NET_IF_TYPE_ETHER, NET_IF_TYPE_WIFI
-net_if_link_sate_flags = NET_IF_LINK_UP, NET_IF_LINK_DOWN
+resource net_if_res[intptr]
 
 NET_DEV_LINK_ETHER {
 	Spd	CPU_INT16U
 	Duplex	CPU_INT08U
-}
-
-# wrong!!! need to be fixed
-NET_IF {
-	Type		flags[net_if_type_flags, int16]
-	Nbr		NET_IF_NBR
-	Init		CPU_BOOLEAN
-	En		CPU_BOOLEAN
-	LinkPrev	flags[net_if_link_sate_flags, int16]
-	Link		flags[net_if_link_sate_flags, int16]
 }

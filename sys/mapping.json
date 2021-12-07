@@ -420,5 +420,143 @@
             0,
             "OS_TCB"
         ]
+    ],
+    "NetIF_DevCfgTxRdySignal": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetIF_DevTxRdySignal": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetDev_Init": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetDev_Start": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetDev_Stop": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetDev_Rx": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetDev_Tx": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetDev_AddrMulticastAdd": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetDev_AddrMulticastRemove": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetDev_ISR_Handler": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetDev_IO_Ctrl": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetDev_MII_Rd": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetDev_MII_Wr": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetDev_RxDescInit": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetDev_RxDescFreeAll": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetDev_RxDescPtrCurInc": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetDev_TxDescInit": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetPhy_Init": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetPhy_EnDis": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetPhy_LinkStateGet": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetPhy_LinkStateSet": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetPhy_AutoNegStart": [
+        [
+            0,
+            "NET_IF"
+        ]
+    ],
+    "NetPhy_AddrProbe": [
+        [
+            0,
+            "NET_IF"
+        ]
     ]
 }
