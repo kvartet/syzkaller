@@ -22,7 +22,7 @@ struct call_props_t {
 
 #if GOARCH_arm
 #define GOARCH "arm"
-#define SYZ_REVISION "b52877c091d4c9364c85b53f149b1fcf32857018"
+#define SYZ_REVISION "45dbc15f20d1c5e7835af260fb52cdd3bb48d04c"
 #define SYZ_EXECUTOR_USES_FORK_SERVER 0
 #define SYZ_EXECUTOR_USES_SHMEM 0
 #define SYZ_PAGE_SIZE 4096

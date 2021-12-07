@@ -1,356 +1,645 @@
-#include <Source/net_err.h>
+include <Source/net_err.h>
+include <Source/net_def.h>
+include <Source/net_bsd.h>
+include <Source/net_sock.h>
+include <IP/IPv6/net_ndp.h>
+# include <IF/net_if.h>
 
 # net.h
-Net_Init(rx_task_cfg ptr[in, const[NET_TASK_CFG]], tx_task_cfg ptr[in, const[NET_TASK_CFG]], tmr_task_cfg ptr[in, const[NET_TASK_CFG]]) (ignore_return)
+Net_Init(rx_task_cfg ptr[in, NET_TASK_CFG], tx_task_cfg ptr[in, NET_TASK_CFG], tmr_task_cfg ptr[in, NET_TASK_CFG]) (ignore_return)
 # NET_ERR
-Net_VersionGet(void) (ignore_return)
+Net_VersionGet() (ignore_return)
 # CPU_INT16U
 Net_TimeDly(time_dly_sec CPU_INT32U, time_dly_us CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]])
-Net_InitDflt(void)
+Net_InitDflt()
+
+NET_TASK_CFG {
+	Prio		CPU_INT32U
+	StkSizeBytes	CPU_INT32U
+	StkPtr		ptr[in, void]
+}
 
 # net_app.h
-NetApp_SockOpen(protocol_family NET_SOCK_PROTOCOL_FAMILY, sock_type NET_SOCK_TYPE, protocol NET_SOCK_PROTOCOL, retry_max CPU_INT16U, time_dly_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_ID
-NetApp_SockClose(sock_id NET_SOCK_ID, timeout_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetApp_SockBind(sock_id NET_SOCK_ID, p_addr_local ptr[in, NET_SOCK_ADDR], addr_len NET_SOCK_ADDR_LEN, retry_max CPU_INT16U, time_dly_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetApp_SockConn(sock_id NET_SOCK_ID, p_addr_remote ptr[in, NET_SOCK_ADDR], addr_len NET_SOCK_ADDR_LEN, retry_max CPU_INT16U, timeout_ms CPU_INT32U, time_dly_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetApp_SockListen(sock_id NET_SOCK_ID, sock_q_size NET_SOCK_Q_SIZE, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetApp_SockAccept(sock_id NET_SOCK_ID, p_addr_remote ptr[in, NET_SOCK_ADDR], p_addr_len ptr[in, NET_SOCK_ADDR_LEN], retry_max CPU_INT16U, timeout_ms CPU_INT32U, time_dly_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_ID
-NetApp_SockRx(sock_id NET_SOCK_ID, p_data_buf ptr[in, void], data_buf_len CPU_INT16U, data_rx_th CPU_INT16U, flags NET_SOCK_API_FLAGS, p_addr_remote ptr[in, NET_SOCK_ADDR], p_addr_len ptr[in, NET_SOCK_ADDR_LEN], retry_max CPU_INT16U, timeout_ms CPU_INT32U, time_dly_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_INT16U
-NetApp_SockTx(sock_id NET_SOCK_ID, p_data ptr[in, void], data_len CPU_INT16U, flags NET_SOCK_API_FLAGS, p_addr_remote ptr[in, NET_SOCK_ADDR], addr_len NET_SOCK_ADDR_LEN, retry_max CPU_INT16U, timeout_ms CPU_INT32U, time_dly_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_INT16U
+NetApp_SockOpen(protocol_family flags[net_sock_protocol_family_flags], sock_type flags[sock_type_flags], protocol flags[net_sock_protocol_flags], retry_max CPU_INT16U, time_dly_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) net_sock_id_res
+NetApp_SockClose(sock_id net_sock_id_res, timeout_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetApp_SockBind(sock_id net_sock_id_res, p_addr_local ptr[in, NET_SOCK_ADDR], addr_len NET_SOCK_ADDR_LEN, retry_max CPU_INT16U, time_dly_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetApp_SockConn(sock_id net_sock_id_res, p_addr_remote ptr[in, NET_SOCK_ADDR], addr_len NET_SOCK_ADDR_LEN, retry_max CPU_INT16U, timeout_ms CPU_INT32U, time_dly_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetApp_SockListen(sock_id net_sock_id_res, sock_q_size NET_SOCK_Q_SIZE, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetApp_SockAccept(sock_id net_sock_id_res, p_addr_remote ptr[in, NET_SOCK_ADDR], p_addr_len ptr[in, NET_SOCK_ADDR_LEN], retry_max CPU_INT16U, timeout_ms CPU_INT32U, time_dly_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) net_sock_id_res
+NetApp_SockRx(sock_id net_sock_id_res, p_data_buf ptr[in, void], data_buf_len CPU_INT16U, data_rx_th CPU_INT16U, flags flags[sockex_flags], p_addr_remote ptr[in, NET_SOCK_ADDR], p_addr_len ptr[in, NET_SOCK_ADDR_LEN], retry_max CPU_INT16U, timeout_ms CPU_INT32U, time_dly_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_INT16U
+NetApp_SockTx(sock_id net_sock_id_res, p_data ptr[in, void], data_len CPU_INT16U, flags flags[sockex_flags], p_addr_remote ptr[in, NET_SOCK_ADDR], addr_len NET_SOCK_ADDR_LEN, retry_max CPU_INT16U, timeout_ms CPU_INT32U, time_dly_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_INT16U
 NetApp_SetSockAddr(p_sock_addr ptr[in, NET_SOCK_ADDR], addr_family NET_SOCK_ADDR_FAMILY, port_nbr NET_PORT_NBR, p_addr ptr[in, CPU_INT08U], addr_len NET_IP_ADDR_LEN, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetApp_ClientStreamOpenByHostname(p_sock_id ptr[in, NET_SOCK_ID], p_host_server ptr[in, CPU_CHAR], port_nbr NET_PORT_NBR, p_sock_addr ptr[in, NET_SOCK_ADDR], p_secure_cfg ptr[in, NET_APP_SOCK_SECURE_CFG], req_timeout_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_IP_ADDR_FAMILY
-NetApp_ClientDatagramOpenByHostname(p_sock_id ptr[in, NET_SOCK_ID], p_remote_host_name ptr[in, CPU_CHAR], remote_port_nbr NET_PORT_NBR, ip_family NET_IP_ADDR_FAMILY, p_sock_addr ptr[in, NET_SOCK_ADDR], p_is_hostname ptr[in, CPU_BOOLEAN], p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_IP_ADDR_FAMILY
-NetApp_ClientStreamOpen(p_addr ptr[in, CPU_INT08U], addr_family NET_IP_ADDR_FAMILY, remote_port_nbr NET_PORT_NBR, p_sock_addr ptr[in, NET_SOCK_ADDR], p_secure_cfg ptr[in, NET_APP_SOCK_SECURE_CFG], req_timeout_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_ID
-NetApp_ClientDatagramOpen(p_addr ptr[in, CPU_INT08U], addr_family NET_IP_ADDR_FAMILY, remote_port_nbr NET_PORT_NBR, p_sock_addr ptr[in, NET_SOCK_ADDR], p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_ID
+NetApp_ClientStreamOpenByHostname(p_sock_id ptr[in, net_sock_id_res], p_host_server ptr[in, CPU_CHAR], port_nbr NET_PORT_NBR, p_sock_addr ptr[in, NET_SOCK_ADDR], p_secure_cfg ptr[in, NET_APP_SOCK_SECURE_CFG], req_timeout_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_IP_ADDR_FAMILY
+NetApp_ClientDatagramOpenByHostname(p_sock_id ptr[in, net_sock_id_res], p_remote_host_name ptr[in, CPU_CHAR], remote_port_nbr NET_PORT_NBR, ip_family flags[net_ip_addr_family_flags], p_sock_addr ptr[in, NET_SOCK_ADDR], p_is_hostname ptr[in, CPU_BOOLEAN], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_IP_ADDR_FAMILY
+NetApp_ClientStreamOpen(p_addr ptr[in, CPU_INT08U], addr_family flags[net_ip_addr_family_flags], remote_port_nbr NET_PORT_NBR, p_sock_addr ptr[in, NET_SOCK_ADDR], p_secure_cfg ptr[in, NET_APP_SOCK_SECURE_CFG], req_timeout_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) net_sock_id_res
+NetApp_ClientDatagramOpen(p_addr ptr[in, CPU_INT08U], addr_family flags[net_ip_addr_family_flags], remote_port_nbr NET_PORT_NBR, p_sock_addr ptr[in, NET_SOCK_ADDR], p_err ptr[out, const[NET_ERR_NONE, int16]]) net_sock_id_res
 NetApp_TimeDly_ms(time_dly_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]])
 
+type NET_SOCK_ADDR_LEN int8
+type NET_IP_ADDR_LEN int8
+type NET_SOCK_Q_SIZE int16
+type NET_SOCK_ADDR_FAMILY int16
+type NET_PORT_NBR int16
+type CPU_INT16S int16
+type NET_SOCK_SECURE_TRUST_FNCT ptr[in, void]
+
+net_sock_protocol_family_flags = NET_SOCK_PROTOCOL_FAMILY_NONE, NET_SOCK_PROTOCOL_FAMILY_IP_V4, NET_SOCK_PROTOCOL_FAMILY_IP_V6
+net_sock_protocol_flags = NET_SOCK_PROTOCOL_DFLT, NET_SOCK_PROTOCOL_NONE, NET_SOCK_PROTOCOL_TCP, NET_SOCK_PROTOCOL_UDP, NET_SOCK_PROTOCOL_IP, NET_SOCK_PROTOCOL_SOCK
+net_sock_secure_cert_key_fmt_flags = NET_SOCK_SECURE_CERT_KEY_FMT_NONE, NET_SOCK_SECURE_CERT_KEY_FMT_PEM, NET_SOCK_SECURE_CERT_KEY_FMT_DER
+net_ip_addr_family_flags = NET_IP_ADDR_FAMILY_UNKNOWN, NET_IP_ADDR_FAMILY_NONE, NET_IP_ADDR_FAMILY_IPv4, NET_IP_ADDR_FAMILY_IPv6
+sockex_flags = NET_SOCK_FLAG_NONE, NET_SOCK_FLAG_RX_DATA_PEEK, NET_SOCK_FLAG_RX_NO_BLOCK
+
+resource net_sock_id_res[CPU_INT16S]
+
+NET_SOCK_ADDR {
+	AddrFamily	NET_SOCK_ADDR_FAMILY
+	Addr		array[CPU_INT08U, NET_SOCK_BSD_ADDR_LEN_MAX]
+}
+
+NET_APP_SOCK_SECURE_CFG {
+	CommonName	ptr[in, CPU_CHAR]
+	TrustCallback	NET_SOCK_SECURE_TRUST_FNCT
+	MutualAuthPtr	ptr[in, NET_APP_SOCK_SECURE_MUTUAL_CFG]
+}
+
+NET_APP_SOCK_SECURE_MUTUAL_CFG {
+	Fmt		flags[net_sock_secure_cert_key_fmt_flags, int16]
+	CertPtr		ptr[in, int8]
+	CertSize	CPU_INT32U
+	CertChained	CPU_BOOLEAN
+	KeyPtr		ptr[in, CPU_CHAR]
+	KeySize		CPU_INT32U
+}
 
 # IP/IPV4/net_arp.h
 NetARP_CfgAddrFilterEn(en CPU_BOOLEAN)
-NetARP_TxReqGratuitous(protocol_type NET_PROTOCOL_TYPE, p_addr_protocol ptr[in, CPU_INT08U], addr_protocol_len NET_CACHE_ADDR_LEN, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetARP_CfgCacheTimeout(timeout_sec CPU_INT16U) CPU_BOOLEAN
-NetARP_CfgCacheTxQ_MaxTh(nbr_buf_max NET_BUF_QTY) CPU_BOOLEAN
-NetARP_CfgCacheAccessedTh(nbr_access CPU_INT16U) CPU_BOOLEAN
-NetARP_CfgReqTimeout(timeout_sec CPU_INT08U) CPU_BOOLEAN
-NetARP_CfgReqMaxRetries(max_nbr_retries CPU_INT08U) CPU_BOOLEAN
-NetARP_IsAddrProtocolConflict(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetARP_CacheGetAddrHW(if_nbr NET_IF_NBR, p_addr_hw ptr[in, CPU_INT08U], addr_hw_len_buf NET_CACHE_ADDR_LEN, p_addr_protocol ptr[in, CPU_INT08U], addr_protocol_len NET_CACHE_ADDR_LEN, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_CACHE_ADDR_LEN
-NetARP_CacheProbeAddrOnNet(protocol_type NET_PROTOCOL_TYPE, p_addr_protocol_sender ptr[in, CPU_INT08U], p_addr_protocol_target ptr[in, CPU_INT08U], addr_protocol_len NET_CACHE_ADDR_LEN, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetARP_CacheCalcStat(void) CPU_INT08U
-NetARP_CachePoolStatGet(void) NET_STAT_POOL
-NetARP_CachePoolStatResetMaxUsed(void)
+NetARP_TxReqGratuitous(protocol_type flags[net_protocol_type_flags], p_addr_protocol ptr[in, CPU_INT08U], addr_protocol_len NET_CACHE_ADDR_LEN, p_err ptr[out, const[NET_ERR_NONE, int16]])
+NetARP_CfgCacheTimeout(timeout_sec CPU_INT16U) (ignore_return)
+# CPU_BOOLEAN
+NetARP_CfgCacheTxQ_MaxTh(nbr_buf_max NET_BUF_QTY) (ignore_return)
+# CPU_BOOLEAN
+NetARP_CfgCacheAccessedTh(nbr_access CPU_INT16U) (ignore_return)
+# CPU_BOOLEAN
+NetARP_CfgReqTimeout(timeout_sec CPU_INT08U) (ignore_return)
+# CPU_BOOLEAN
+NetARP_CfgReqMaxRetries(max_nbr_retries CPU_INT08U) (ignore_return)
+# CPU_BOOLEAN
+NetARP_IsAddrProtocolConflict(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetARP_CacheGetAddrHW(if_nbr NET_IF_NBR, p_addr_hw ptr[in, CPU_INT08U], addr_hw_len_buf NET_CACHE_ADDR_LEN, p_addr_protocol ptr[in, CPU_INT08U], addr_protocol_len NET_CACHE_ADDR_LEN, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_CACHE_ADDR_LEN
+NetARP_CacheProbeAddrOnNet(protocol_type flags[net_protocol_type_flags], p_addr_protocol_sender ptr[in, CPU_INT08U], p_addr_protocol_target ptr[in, CPU_INT08U], addr_protocol_len NET_CACHE_ADDR_LEN, p_err ptr[out, const[NET_ERR_NONE, int16]])
+NetARP_CacheCalcStat() (ignore_return)
+# CPU_INT08U
+NetARP_CachePoolStatGet() (ignore_return)
+# NET_STAT_POOL
+NetARP_CachePoolStatResetMaxUsed()
 
+type NET_BUF_QTY int16
+type NET_CACHE_ADDR_LEN int8
+
+net_protocol_type_flags = NET_PROTOCOL_TYPE_NONE, NET_PROTOCOL_TYPE_ALL, NET_PROTOCOL_TYPE_LINK, NET_PROTOCOL_TYPE_IF, NET_PROTOCOL_TYPE_IF_FRAME, NET_PROTOCOL_TYPE_IF_ETHER, NET_PROTOCOL_TYPE_IF_IEEE_802, NET_PROTOCOL_TYPE_ARP, NET_PROTOCOL_TYPE_NDP, NET_PROTOCOL_TYPE_IP_V4, NET_PROTOCOL_TYPE_IP_V4_OPT, NET_PROTOCOL_TYPE_IP_V6, NET_PROTOCOL_TYPE_IP_V6_EXT_HOP_BY_HOP, NET_PROTOCOL_TYPE_IP_V6_EXT_ROUTING, NET_PROTOCOL_TYPE_IP_V6_EXT_FRAG, NET_PROTOCOL_TYPE_IP_V6_EXT_ESP, NET_PROTOCOL_TYPE_IP_V6_EXT_AUTH, NET_PROTOCOL_TYPE_IP_V6_EXT_NONE, NET_PROTOCOL_TYPE_IP_V6_EXT_DEST, NET_PROTOCOL_TYPE_IP_V6_EXT_MOBILITY, NET_PROTOCOL_TYPE_ICMP_V4, NET_PROTOCOL_TYPE_ICMP_V6, NET_PROTOCOL_TYPE_IGMP, NET_PROTOCOL_TYPE_UDP_V4, NET_PROTOCOL_TYPE_TCP_V4, NET_PROTOCOL_TYPE_UDP_V6, NET_PROTOCOL_TYPE_TCP_V6, NET_PROTOCOL_TYPE_APP, NET_PROTOCOL_TYPE_SOCK
 
 # IP/IPV6/net_ndp.h
-NetNDP_CfgNeighborCacheTimeout(timeout_sec CPU_INT16U) CPU_BOOLEAN
-NetNDP_CfgReachabilityTimeout(timeout_type NET_NDP_TIMEOUT, timeout_sec CPU_INT16U) CPU_BOOLEAN
-NetNDP_CfgSolicitMaxNbr(solicit_type NET_NDP_SOLICIT, max_nbr CPU_INT08U) CPU_BOOLEAN
-NetNDP_CfgCacheTxQ_MaxTh(nbr_buf_max NET_BUF_QTY) CPU_BOOLEAN
+NetNDP_CfgNeighborCacheTimeout(timeout_sec CPU_INT16U) (ignore_return)
+# CPU_BOOLEAN
+NetNDP_CfgReachabilityTimeout(timeout_type flags[net_ndp_timeout_flags], timeout_sec CPU_INT16U) (ignore_return)
+# CPU_BOOLEAN
+NetNDP_CfgSolicitMaxNbr(solicit_type flags[net_ndp_solicit_flags], max_nbr CPU_INT08U) (ignore_return)
+# CPU_BOOLEAN
+NetNDP_CfgCacheTxQ_MaxTh(nbr_buf_max NET_BUF_QTY) (ignore_return)
+# CPU_BOOLEAN
+
+net_ndp_timeout_flags = NET_NDP_TIMEOUT_REACHABLE, NET_NDP_TIMEOUT_DELAY, NET_NDP_TIMEOUT_SOLICIT
+net_ndp_solicit_flags = NET_NDP_SOLICIT_MULTICAST, NET_NDP_SOLICIT_UNICAST, NET_NDP_SOLICIT_DAD
 
 # net_ascii.h
 NetASCII_Str_to_MAC(p_addr_mac_ascii ptr[in, CPU_CHAR], p_addr_mac ptr[in, CPU_INT08U], p_err ptr[out, const[NET_ERR_NONE, int16]])
 NetASCII_MAC_to_Str(p_addr_mac ptr[in, CPU_INT08U], p_addr_mac_ascii ptr[in, CPU_CHAR], hex_lower_case CPU_BOOLEAN, hex_colon_sep CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetASCII_Str_to_IP(p_addr_ip_ascii ptr[in, CPU_CHAR], p_addr ptr[in, void], addr_max_len CPU_INT08U, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_IP_ADDR_FAMILY
-NetASCII_Str_to_IPv4(p_addr_ip_ascii ptr[in, CPU_CHAR], p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_IPv4_ADDR
-NetASCII_Str_to_IPv6(p_addr_ip_ascii ptr[in, CPU_CHAR], p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_IPv6_ADDR
+NetASCII_Str_to_IP(p_addr_ip_ascii ptr[in, CPU_CHAR], p_addr ptr[in, void], addr_max_len CPU_INT08U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_IP_ADDR_FAMILY
+NetASCII_Str_to_IPv4(p_addr_ip_ascii ptr[in, CPU_CHAR], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_IPv4_ADDR
+NetASCII_Str_to_IPv6(p_addr_ip_ascii ptr[in, CPU_CHAR], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_IPv6_ADDR
 NetASCII_IPv4_to_Str(addr_ip NET_IPv4_ADDR, p_addr_ip_ascii ptr[in, CPU_CHAR], lead_zeros CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetASCII_Str_to_IPv4_Handler(p_addr_ip_ascii ptr[in, CPU_CHAR], p_dot_nbr ptr[in, CPU_INT08U], p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_IPv4_ADDR
+NetASCII_Str_to_IPv4_Handler(p_addr_ip_ascii ptr[in, CPU_CHAR], p_dot_nbr ptr[in, CPU_INT08U], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_IPv4_ADDR
 NetASCII_IPv6_to_Str(p_addr_ip ptr[in, NET_IPv6_ADDR], p_addr_ip_ascii ptr[in, CPU_CHAR], hex_lower_case CPU_BOOLEAN, lead_zeros CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]])
 
+type NET_IPv4_ADDR int32
+
+NET_IPv6_ADDR {
+	Addr	array[CPU_INT08U, NET_IPv6_ADDR_LEN]
+}
+
 # net_buf.h
-NetBuf_PoolStatGet(if_nbr NET_IF_NBR) NET_STAT_POOL
+NetBuf_PoolStatGet(if_nbr NET_IF_NBR) (ignore_return)
+# NET_STAT_POOL
 NetBuf_PoolStatResetMaxUsed(if_nbr NET_IF_NBR)
-NetBuf_RxLargePoolStatGet(if_nbr NET_IF_NBR) NET_STAT_POOL
+NetBuf_RxLargePoolStatGet(if_nbr NET_IF_NBR) (ignore_return)
+# NET_STAT_POOL
 NetBuf_RxLargePoolStatResetMaxUsed(if_nbr NET_IF_NBR)
-NetBuf_TxLargePoolStatGet(if_nbr NET_IF_NBR) NET_STAT_POOL
+NetBuf_TxLargePoolStatGet(if_nbr NET_IF_NBR) (ignore_return)
+# NET_STAT_POOL
 NetBuf_TxLargePoolStatResetMaxUsed(if_nbr NET_IF_NBR)
-NetBuf_TxSmallPoolStatGet(if_nbr NET_IF_NBR) NET_STAT_POOL
+NetBuf_TxSmallPoolStatGet(if_nbr NET_IF_NBR) (ignore_return)
+# NET_STAT_POOL
 NetBuf_TxSmallPoolStatResetMaxUsed(if_nbr NET_IF_NBR)
 
-# net_conn.h
-NetConn_Init(void)
-NetConn_CfgAccessedTh(nbr_access CPU_INT16U) CPU_BOOLEAN
-NetConn_Get(family NET_CONN_FAMILY, protocol_ix NET_CONN_PROTOCOL_IX, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_CONN_ID
-NetConn_Free(conn_id NET_CONN_ID)
-NetConn_Copy(conn_id_dest NET_CONN_ID, conn_id_src NET_CONN_ID)
-NetConn_CloseFromApp(conn_id NET_CONN_ID, close_conn_transport CPU_BOOLEAN)
-NetConn_CloseFromTransport(conn_id NET_CONN_ID, close_conn_app CPU_BOOLEAN)
-NetConn_CloseAllConns(void)
-NetConn_CloseAllConnsByIF(if_nbr NET_IF_NBR)
-NetConn_CloseAllConnsByAddr(p_addr ptr[in, CPU_INT08U], addr_len NET_CONN_ADDR_LEN)
-NetConn_CloseAllConnsByAddrHandler(p_addr ptr[in, CPU_INT08U], addr_len NET_CONN_ADDR_LEN)
-NetConn_IF_NbrGet(conn_id NET_CONN_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_IF_NBR
-NetConn_ID_AppGet(conn_id NET_CONN_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_CONN_ID
-NetConn_ID_AppSet(conn_id NET_CONN_ID, conn_id_app NET_CONN_ID, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetConn_ID_AppCloneGet(conn_id NET_CONN_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_CONN_ID
-NetConn_ID_AppCloneSet(conn_id NET_CONN_ID, conn_id_app NET_CONN_ID, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetConn_ID_TransportGet(conn_id NET_CONN_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_CONN_ID
-NetConn_ID_TransportSet(conn_id NET_CONN_ID, conn_id_transport NET_CONN_ID, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetConn_AddrLocalGet(conn_id NET_CONN_ID, p_addr_local ptr[in, CPU_INT08U], p_addr_len ptr[in, NET_CONN_ADDR_LEN], p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetConn_AddrLocalSet(conn_id NET_CONN_ID, if_nbr NET_IF_NBR, p_addr_local ptr[in, CPU_INT08U], addr_len NET_CONN_ADDR_LEN, addr_over_wr CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetConn_AddrRemoteGet(conn_id NET_CONN_ID, p_addr_remote ptr[in, CPU_INT08U], p_addr_len ptr[in, NET_CONN_ADDR_LEN], p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetConn_AddrRemoteSet(conn_id NET_CONN_ID, p_addr_remote ptr[in, CPU_INT08U], addr_len NET_CONN_ADDR_LEN, addr_over_wr CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetConn_AddrRemoteCmp(conn_id NET_CONN_ID, p_addr_remote ptr[in, CPU_INT08U], addr_len NET_CONN_ADDR_LEN, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetConn_IPv4TxParamsGet(conn_id NET_CONN_ID, p_ip_flags ptr[in, NET_IPv4_FLAGS], p_ip_tos ptr[in, NET_IPv4_TOS], p_ip_ttl ptr[in, NET_IPv4_TTL], p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetConn_IPv4TxFlagsGet(conn_id NET_CONN_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_IPv4_FLAGS
-NetConn_IPv4TxFlagsSet(conn_id NET_CONN_ID, ip_flags NET_IPv4_FLAGS, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetConn_IPv4TxTOS_Get(conn_id NET_CONN_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_IPv4_TOS
-NetConn_IPv4TxTOS_Set(conn_id NET_CONN_ID, ip_tos NET_IPv4_TOS, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetConn_IPv4TxTTL_Get(conn_id NET_CONN_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_IPv4_TTL
-NetConn_IPv4TxTTL_Set(conn_id NET_CONN_ID, ip_ttl NET_IPv4_TTL, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetConn_IPv4TxTTL_MulticastGet(conn_id NET_CONN_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_IPv4_TTL
-NetConn_IPv4TxTTL_MulticastSet(conn_id NET_CONN_ID, ip_ttl NET_IPv4_TTL, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetConn_IPv6TxParamsGet(conn_id NET_CONN_ID, p_ip_traffic_class ptr[in, NET_IPv6_TRAFFIC_CLASS], p_ip_flow_label ptr[in, NET_IPv6_FLOW_LABEL], p_ip_hop_lim ptr[in, NET_IPv6_HOP_LIM], p_ip_flags ptr[in, NET_IPv6_FLAGS], p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetConn_IPv6TxHopLimMcastGet(conn_id NET_CONN_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_IPv6_HOP_LIM
-NetConn_IPv6TxHopLimMcastSet(conn_id NET_CONN_ID, ip_hop_lim NET_IPv6_HOP_LIM, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetConn_IsUsed(conn_id NET_CONN_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetConn_IsIPv6(conn_id NET_CONN_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetConn_IsPortUsed(port_nbr NET_PORT_NBR, protocol NET_PROTOCOL_TYPE, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetConn_IsConn(conn_id NET_CONN_ID, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetConn_PoolStatGet(void) NET_STAT_POOL
-NetConn_PoolStatResetMaxUsed(void)
-NetConn_Srch(family NET_CONN_FAMILY, protocol_ix NET_CONN_PROTOCOL_IX, p_addr_local ptr[in, CPU_INT08U], p_addr_remote ptr[in, CPU_INT08U], addr_len NET_CONN_ADDR_LEN, p_conn_id_transport ptr[in, NET_CONN_ID], p_conn_id_app ptr[in, NET_CONN_ID], p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_CONN_ID
-NetConn_ListAdd(conn_id NET_CONN_ID, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetConn_ListUnlink(conn_id NET_CONN_ID, p_err ptr[out, const[NET_ERR_NONE, int16]])
-
 # net_icmp.h
-NetICMP_TxEchoReq(p_addr_dest ptr[in, CPU_INT08U], addr_len NET_IP_ADDR_LEN, timeout_ms CPU_INT32U, p_data ptr[in, void], data_len CPU_INT16U, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
+NetICMP_TxEchoReq(p_addr_dest ptr[in, CPU_INT08U], addr_len NET_IP_ADDR_LEN, timeout_ms CPU_INT32U, p_data ptr[in, void], data_len CPU_INT16U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
 
 # IF/net_if.h
-NetIF_Add(if_api ptr[in, void], dev_api ptr[in, void], dev_bsp ptr[in, void], dev_cfg ptr[in, void], ext_api ptr[in, void], ext_cfg ptr[in, void], p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_IF_NBR
+NetIF_Add(if_api ptr[in, void], dev_api ptr[in, void], dev_bsp ptr[in, void], dev_cfg ptr[in, void], ext_api ptr[in, void], ext_cfg ptr[in, void], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_IF_NBR
 NetIF_Start(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]])
 NetIF_Stop(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetIF_CfgPhyLinkPeriod(time_ms CPU_INT16U) CPU_BOOLEAN
-NetIF_GetRxDataAlignPtr(if_nbr NET_IF_NBR, p_data ptr[in, void], p_err ptr[out, const[NET_ERR_NONE, int16]]) ptr[void]
-NetIF_IsValid(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIF_IsValidCfgd(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIF_IsEn(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIF_IsEnCfgd(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIF_GetExtAvailCtr(p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_INT08U
-NetIF_GetNbrBaseCfgd(void) NET_IF_NBR
+NetIF_CfgPhyLinkPeriod(time_ms CPU_INT16U) (ignore_return)
+# CPU_BOOLEAN
+NetIF_GetRxDataAlignPtr(if_nbr NET_IF_NBR, p_data ptr[in, void], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# ptr[void]
+NetIF_IsValid(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIF_IsValidCfgd(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIF_IsEn(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIF_IsEnCfgd(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIF_GetExtAvailCtr(p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_INT08U
+NetIF_GetNbrBaseCfgd() (ignore_return)
+# NET_IF_NBR
 NetIF_AddrHW_Get(if_nbr NET_IF_NBR, p_addr_hw ptr[in, CPU_INT08U], p_addr_len ptr[in, CPU_INT08U], p_err ptr[out, const[NET_ERR_NONE, int16]])
 NetIF_AddrHW_Set(if_nbr NET_IF_NBR, p_addr_hw ptr[in, CPU_INT08U], addr_len CPU_INT08U, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetIF_AddrHW_IsValid(if_nbr NET_IF_NBR, p_addr_hw ptr[in, CPU_INT08U], p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIF_MTU_Get(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_MTU
+NetIF_AddrHW_IsValid(if_nbr NET_IF_NBR, p_addr_hw ptr[in, CPU_INT08U], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIF_MTU_Get(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_MTU
 NetIF_MTU_Set(if_nbr NET_IF_NBR, mtu NET_MTU, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetIF_LinkStateGet(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_IF_LINK_STATE
-NetIF_LinkStateWaitUntilUp(if_nbr NET_IF_NBR, retry_max CPU_INT16U, time_dly_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
+NetIF_LinkStateGet(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_IF_LINK_STATE
+NetIF_LinkStateWaitUntilUp(if_nbr NET_IF_NBR, retry_max CPU_INT16U, time_dly_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
 NetIF_LinkStateSubscribe(if_nbr NET_IF_NBR, fcnt NET_IF_LINK_SUBSCRIBER_FNCT, p_err ptr[out, const[NET_ERR_NONE, int16]])
 NetIF_LinkStateUnsubscribe(if_nbr NET_IF_NBR, fcnt NET_IF_LINK_SUBSCRIBER_FNCT, p_err ptr[out, const[NET_ERR_NONE, int16]])
 NetIF_IO_Ctrl(if_nbr NET_IF_NBR, opt CPU_INT08U, p_data ptr[in, void], p_err ptr[out, const[NET_ERR_NONE, int16]])
 NetIF_TxSuspendTimeoutSet(if_nbr NET_IF_NBR, timeout_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetIF_TxSuspendTimeoutGet_ms(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_INT32U
-NetIF_ISR_Handler(if_nbr NET_IF_NBR, type NET_DEV_ISR_TYPE, p_err ptr[out, const[NET_ERR_NONE, int16]])
+NetIF_TxSuspendTimeoutGet_ms(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_INT32U
+NetIF_ISR_Handler(if_nbr NET_IF_NBR, type flags[net_dev_isr_type_flags], p_err ptr[out, const[NET_ERR_NONE, int16]])
 NetIF_RxTaskSignal(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]])
 NetIF_DevCfgTxRdySignal(p_if ptr[in, NET_IF], cnt CPU_INT16U, p_err ptr[out, const[NET_ERR_NONE, int16]])
 NetIF_DevTxRdySignal(p_if ptr[in, NET_IF])
 NetIF_TxDeallocTaskPost(p_buf_data ptr[in, CPU_INT08U], p_err ptr[out, const[NET_ERR_NONE, int16]])
 
-# net_igmp.h
-NetIGMP_HostGrpJoin(if_nbr NET_IF_NBR, addr_grp NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIGMP_HostGrpJoinHandler(if_nbr NET_IF_NBR, addr_grp NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIGMP_HostGrpLeave(if_nbr NET_IF_NBR, addr_grp NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIGMP_HostGrpLeaveHandler(if_nbr NET_IF_NBR, addr_grp NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIGMP_IsGrpJoinedOnIF(if_nbr NET_IF_NBR, addr_grp NET_IPv4_ADDR) CPU_BOOLEAN
+net_dev_isr_type_flags = NET_DEV_ISR_TYPE_NONE, NET_DEV_ISR_TYPE_UNKNOWN, NET_DEV_ISR_TYPE_RX, NET_DEV_ISR_TYPE_RX_RUNT, NET_DEV_ISR_TYPE_RX_OVERRUN, NET_DEV_ISR_TYPE_TX_RDY, NET_DEV_ISR_TYPE_TX_COMPLETE, NET_DEV_ISR_TYPE_TX_COLLISION_LATE, NET_DEV_ISR_TYPE_TX_COLLISION_EXCESS, NET_DEV_ISR_TYPE_JABBER, NET_DEV_ISR_TYPE_BABBLE, NET_DEV_ISR_TYPE_PHY, NET_DEV_ISR_TYPE_TX_DONE
 
-# net_mldp.h
-NetMLDP_HostGrpJoin(if_nbr NET_IF_NBR, p_addr ptr[in, NET_IPv6_ADDR], p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetMLDP_HostGrpLeave(if_nbr NET_IF_NBR, p_addr ptr[in, NET_IPv6_ADDR], p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
+type NET_IF_LINK_SUBSCRIBER_FNCT ptr[in, void]
+type NET_MTU int16
 
-# IP/IPV4/net_ipv4.h
-NetIPv4_CfgAddrAdd(if_nbr NET_IF_NBR, addr_host NET_IPv4_ADDR, addr_subnet_mask NET_IPv4_ADDR, addr_dflt_gateway NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIPv4_CfgAddrAddDynamic(if_nbr NET_IF_NBR, addr_host NET_IPv4_ADDR, addr_subnet_mask NET_IPv4_ADDR, addr_dflt_gateway NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIPv4_CfgAddrAddDynamicStart(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIPv4_CfgAddrAddDynamicStop(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIPv4_CfgAddrRemove(if_nbr NET_IF_NBR, addr_host NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIPv4_CfgAddrRemoveAll(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIPv4_CfgFragReasmTimeout(timeout_sec CPU_INT08U) CPU_BOOLEAN
-NetIPv4_GetAddrHost(if_nbr NET_IF_NBR, p_addr_tbl ptr[in, NET_IPv4_ADDR], p_addr_tbl_qty ptr[in, NET_IP_ADDRS_QTY], p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIPv4_GetAddrSrc(addr_remote NET_IPv4_ADDR) NET_IPv4_ADDR
-NetIPv4_GetAddrSubnetMask(addr NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_IPv4_ADDR
-NetIPv4_GetAddrDfltGateway(addr NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_IPv4_ADDR
-NetIPv4_IsAddrClassA(addr NET_IPv4_ADDR) CPU_BOOLEAN
-NetIPv4_IsAddrClassB(addr NET_IPv4_ADDR) CPU_BOOLEAN
-NetIPv4_IsAddrClassC(addr NET_IPv4_ADDR) CPU_BOOLEAN
-NetIPv4_IsAddrClassD(addr NET_IPv4_ADDR) CPU_BOOLEAN
-NetIPv4_IsAddrThisHost(addr NET_IPv4_ADDR) CPU_BOOLEAN
-NetIPv4_IsAddrLocalHost(addr NET_IPv4_ADDR) CPU_BOOLEAN
-NetIPv4_IsAddrLocalLink(addr NET_IPv4_ADDR) CPU_BOOLEAN
-NetIPv4_IsAddrBroadcast(addr NET_IPv4_ADDR) CPU_BOOLEAN
-NetIPv4_IsAddrMulticast(addr NET_IPv4_ADDR) CPU_BOOLEAN
-NetIPv4_IsAddrHost(addr NET_IPv4_ADDR) CPU_BOOLEAN
-NetIPv4_IsAddrHostCfgd(addr NET_IPv4_ADDR) CPU_BOOLEAN
-NetIPv4_IsAddrsCfgdOnIF(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIPv4_IsValidAddrHost(addr_host NET_IPv4_ADDR) CPU_BOOLEAN
-NetIPv4_IsValidAddrHostCfgd(addr_host NET_IPv4_ADDR, addr_subnet_mask NET_IPv4_ADDR) CPU_BOOLEAN
-NetIPv4_IsValidAddrSubnetMask(addr_subnet_mask NET_IPv4_ADDR) CPU_BOOLEAN
+# IP/IPv4/net_igmp.h
+NetIGMP_HostGrpJoin(if_nbr NET_IF_NBR, addr_grp NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIGMP_HostGrpJoinHandler(if_nbr NET_IF_NBR, addr_grp NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIGMP_HostGrpLeave(if_nbr NET_IF_NBR, addr_grp NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIGMP_HostGrpLeaveHandler(if_nbr NET_IF_NBR, addr_grp NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIGMP_IsGrpJoinedOnIF(if_nbr NET_IF_NBR, addr_grp NET_IPv4_ADDR) (ignore_return)
+# CPU_BOOLEAN
+
+# IP/IPv6/net_mldp.h
+NetMLDP_HostGrpJoin(if_nbr NET_IF_NBR, p_addr ptr[in, NET_IPv6_ADDR], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetMLDP_HostGrpLeave(if_nbr NET_IF_NBR, p_addr ptr[in, NET_IPv6_ADDR], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+
+# IP/IPv4/net_ipv4.h
+NetIPv4_CfgAddrAdd(if_nbr NET_IF_NBR, addr_host NET_IPv4_ADDR, addr_subnet_mask NET_IPv4_ADDR, addr_dflt_gateway NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_CfgAddrAddDynamic(if_nbr NET_IF_NBR, addr_host NET_IPv4_ADDR, addr_subnet_mask NET_IPv4_ADDR, addr_dflt_gateway NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_CfgAddrAddDynamicStart(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_CfgAddrAddDynamicStop(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_CfgAddrRemove(if_nbr NET_IF_NBR, addr_host NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_CfgAddrRemoveAll(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_CfgFragReasmTimeout(timeout_sec CPU_INT08U) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_GetAddrHost(if_nbr NET_IF_NBR, p_addr_tbl ptr[in, NET_IPv4_ADDR], p_addr_tbl_qty ptr[in, NET_IP_ADDRS_QTY], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_GetAddrSrc(addr_remote NET_IPv4_ADDR) (ignore_return)
+# NET_IPv4_ADDR
+NetIPv4_GetAddrSubnetMask(addr NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_IPv4_ADDR
+NetIPv4_GetAddrDfltGateway(addr NET_IPv4_ADDR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_IPv4_ADDR
+NetIPv4_IsAddrClassA(addr NET_IPv4_ADDR) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_IsAddrClassB(addr NET_IPv4_ADDR) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_IsAddrClassC(addr NET_IPv4_ADDR) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_IsAddrClassD(addr NET_IPv4_ADDR) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_IsAddrThisHost(addr NET_IPv4_ADDR) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_IsAddrLocalHost(addr NET_IPv4_ADDR) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_IsAddrLocalLink(addr NET_IPv4_ADDR) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_IsAddrBroadcast(addr NET_IPv4_ADDR) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_IsAddrMulticast(addr NET_IPv4_ADDR) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_IsAddrHost(addr NET_IPv4_ADDR) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_IsAddrHostCfgd(addr NET_IPv4_ADDR) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_IsAddrsCfgdOnIF(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_IsValidAddrHost(addr_host NET_IPv4_ADDR) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_IsValidAddrHostCfgd(addr_host NET_IPv4_ADDR, addr_subnet_mask NET_IPv4_ADDR) (ignore_return)
+# CPU_BOOLEAN
+NetIPv4_IsValidAddrSubnetMask(addr_subnet_mask NET_IPv4_ADDR) (ignore_return)
+# CPU_BOOLEAN
+
+type NET_IP_ADDRS_QTY int8
 
 # IP/IPv6/net_ipv6.h
-NetIPv6_AddrAutoCfgEn(if_nbr NET_IF_NBR, dad_en CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIPv6_AddrAutoCfgDis(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIPv6_AddrAutoCfgHookSet(if_nbr NET_IF_NBR, fnct NET_IPv6_AUTO_CFG_HOOK_FNCT, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetIPv6_CfgAddrHookSet(if_nbr NET_IF_NBR, fnct NET_IPv6_ADDR_HOOK_FNCT, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetIPv6_CfgAddrAdd(if_nbr NET_IF_NBR, p_addr ptr[in, NET_IPv6_ADDR], prefix_len CPU_INT08U, flags NET_FLAGS, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIPv6_CfgAddrRemove(if_nbr NET_IF_NBR, p_addr_host ptr[in, NET_IPv6_ADDR], p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIPv6_CfgAddrRemoveAll(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIPv6_CfgFragReasmTimeout(timeout_sec CPU_INT08U) CPU_BOOLEAN
-NetIPv6_GetAddrHost(if_nbr NET_IF_NBR, p_addr_tbl ptr[in, NET_IPv6_ADDR], p_addr_tbl_qty ptr[in, NET_IP_ADDRS_QTY], p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIPv6_GetAddrSrc(p_if_nbr ptr[in, NET_IF_NBR], p_addr_src ptr[in, const[NET_IPv6_ADDR]], p_addr_dest ptr[in, const[NET_IPv6_ADDR]], p_addr_nexthop ptr[in, NET_IPv6_ADDR], p_err ptr[out, const[NET_ERR_NONE, int16]]) ptr[out, const[NET_IPv6_ADDRS]]
+NetIPv6_AddrAutoCfgEn(if_nbr NET_IF_NBR, dad_en CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_AddrAutoCfgDis(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+# need to be fixed argument: NET_IPv6_AUTO_CFG_HOOK_FNCT
+# NetIPv6_AddrAutoCfgHookSet(if_nbr NET_IF_NBR, fnct NET_IPv6_AUTO_CFG_HOOK_FNCT, p_err ptr[out, const[NET_ERR_NONE, int16]])
+# NetIPv6_CfgAddrHookSet(if_nbr NET_IF_NBR, fnct NET_IPv6_ADDR_HOOK_FNCT, p_err ptr[out, const[NET_ERR_NONE, int16]])
+NetIPv6_CfgAddrAdd(if_nbr NET_IF_NBR, p_addr ptr[in, NET_IPv6_ADDR], prefix_len CPU_INT08U, flags NET_FLAGS, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_CfgAddrRemove(if_nbr NET_IF_NBR, p_addr_host ptr[in, NET_IPv6_ADDR], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_CfgAddrRemoveAll(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_CfgFragReasmTimeout(timeout_sec CPU_INT08U) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_GetAddrHost(if_nbr NET_IF_NBR, p_addr_tbl ptr[in, NET_IPv6_ADDR], p_addr_tbl_qty ptr[in, NET_IP_ADDRS_QTY], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_GetAddrSrc(p_if_nbr ptr[in, NET_IF_NBR], p_addr_src ptr[in, NET_IPv6_ADDR], p_addr_dest ptr[in, NET_IPv6_ADDR], p_addr_nexthop ptr[in, NET_IPv6_ADDR], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# ptr[out, const[NET_IPv6_ADDRS]]
 # return value need to be fixed
-NetIPv6_GetAddrMatchingLen(p_addr_1 ptr[in, const[NET_IPv6_ADDR]], p_addr_2 ptr[in, const[NET_IPv6_ADDR]]) CPU_INT08U
-NetIPv6_GetAddrScope(p_addr ptr[in, const[NET_IPv6_ADDR]]) NET_IPv6_SCOPE
-NetIPv6_IsAddrHostCfgd(p_addr ptr[in, const[NET_IPv6_ADDR]]) CPU_BOOLEAN
-NetIPv6_IsAddrsCfgdOnIF(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetIPv6_IsValidAddrHost(p_addr_host ptr[in, const[NET_IPv6_ADDR]]) CPU_BOOLEAN
-NetIPv6_IsAddrLinkLocal(p_addr ptr[in, const[NET_IPv6_ADDR]]) CPU_BOOLEAN
-NetIPv6_IsAddrSiteLocal(p_addr ptr[in, const[NET_IPv6_ADDR]]) CPU_BOOLEAN
-NetIPv6_IsAddrMcast(p_addr ptr[in, const[NET_IPv6_ADDR]]) CPU_BOOLEAN
-NetIPv6_IsAddrMcastAllRouters(p_addr ptr[in, const[NET_IPv6_ADDR]]) CPU_BOOLEAN
-NetIPv6_IsAddrMcastAllNodes(p_addr ptr[in, const[NET_IPv6_ADDR]]) CPU_BOOLEAN
-NetIPv6_IsAddrMcastSolNode(p_addr ptr[in, const[NET_IPv6_ADDR]], p_addr_input ptr[in, const[NET_IPv6_ADDR]]) CPU_BOOLEAN
-NetIPv6_IsAddrMcastRsvd(p_addr ptr[in, const[NET_IPv6_ADDR]]) CPU_BOOLEAN
-NetIPv6_IsAddrUnspecified(p_addr ptr[in, const[NET_IPv6_ADDR]]) CPU_BOOLEAN
-NetIPv6_IsAddrLoopback(p_addr ptr[in, const[NET_IPv6_ADDR]]) CPU_BOOLEAN
-NetIPv6_AddrTypeValidate(p_addr ptr[in, const[NET_IPv6_ADDR]], if_nbr NET_IF_NBR) NET_IPv6_ADDR_TYPE
-NetIPv6_CreateIF_ID(if_nbr NET_IF_NBR, p_if_ID ptr[in, NET_IPv6_ADDR], id_type NET_IPv6_ADDR_ID_TYPE, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_INT08U
+NetIPv6_GetAddrMatchingLen(p_addr_1 ptr[in, NET_IPv6_ADDR], p_addr_2 ptr[in, NET_IPv6_ADDR]) (ignore_return)
+# CPU_INT08U
+NetIPv6_GetAddrScope(p_addr ptr[in, NET_IPv6_ADDR]) (ignore_return)
+# NET_IPv6_SCOPE
+NetIPv6_IsAddrHostCfgd(p_addr ptr[in, NET_IPv6_ADDR]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_IsAddrsCfgdOnIF(if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_IsValidAddrHost(p_addr_host ptr[in, NET_IPv6_ADDR]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_IsAddrLinkLocal(p_addr ptr[in, NET_IPv6_ADDR]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_IsAddrSiteLocal(p_addr ptr[in, NET_IPv6_ADDR]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_IsAddrMcast(p_addr ptr[in, NET_IPv6_ADDR]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_IsAddrMcastAllRouters(p_addr ptr[in, NET_IPv6_ADDR]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_IsAddrMcastAllNodes(p_addr ptr[in, NET_IPv6_ADDR]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_IsAddrMcastSolNode(p_addr ptr[in, NET_IPv6_ADDR], p_addr_input ptr[in, NET_IPv6_ADDR]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_IsAddrMcastRsvd(p_addr ptr[in, NET_IPv6_ADDR]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_IsAddrUnspecified(p_addr ptr[in, NET_IPv6_ADDR]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_IsAddrLoopback(p_addr ptr[in, NET_IPv6_ADDR]) (ignore_return)
+# CPU_BOOLEAN
+NetIPv6_AddrTypeValidate(p_addr ptr[in, NET_IPv6_ADDR], if_nbr NET_IF_NBR) (ignore_return)
+# NET_IPv6_ADDR_TYPE
+NetIPv6_CreateIF_ID(if_nbr NET_IF_NBR, p_if_ID ptr[in, NET_IPv6_ADDR], id_type NET_IPv6_ADDR_ID_TYPE, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_INT08U
 NetIPv6_CreateAddrFromID(p_addr_ID ptr[in, NET_IPv6_ADDR], p_addr_prefix ptr[in, NET_IPv6_ADDR], prefix_type NET_IPv6_ADDR_PREFIX_TYPE, prefix_len CPU_SIZE_T, p_err ptr[out, const[NET_ERR_NONE, int16]])
 NetIPv6_MaskGet(p_mask_rtn ptr[in, NET_IPv6_ADDR], prefix_len CPU_INT08U, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetIPv6_AddrMaskByPrefixLen(p_addr ptr[in, const[NET_IPv6_ADDR]], prefix_len CPU_INT08U, p_addr_rtn ptr[in, NET_IPv6_ADDR], p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetIPv6_AddrMask(p_addr ptr[in, const[NET_IPv6_ADDR]], p_mask ptr[in, const[NET_IPv6_ADDR]], p_addr_rtn ptr[in, NET_IPv6_ADDR])
+NetIPv6_AddrMaskByPrefixLen(p_addr ptr[in, NET_IPv6_ADDR], prefix_len CPU_INT08U, p_addr_rtn ptr[in, NET_IPv6_ADDR], p_err ptr[out, const[NET_ERR_NONE, int16]])
+NetIPv6_AddrMask(p_addr ptr[in, NET_IPv6_ADDR], p_mask ptr[in, NET_IPv6_ADDR], p_addr_rtn ptr[in, NET_IPv6_ADDR])
 
+type NET_FLAGS int16
+type NET_IPv6_ADDR_PREFIX_TYPE int8
+type NET_IPv6_ADDR_ID_TYPE int8
 
-# net_socket.h
-NetSock_Open(protocol_family NET_SOCK_PROTOCOL_FAMILY, sock_type NET_SOCK_TYPE, protocol NET_SOCK_PROTOCOL, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_ID
-NetSock_Close(sock_id NET_SOCK_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_RTN_CODE
-NetSock_Bind(sock_id NET_SOCK_ID, paddr_local ptr[in, NET_SOCK_ADDR], addr_len NET_SOCK_ADDR_LEN, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_RTN_CODE
-NetSock_Conn(sock_id NET_SOCK_ID, paddr_remote ptr[in, NET_SOCK_ADDR], addr_len NET_SOCK_ADDR_LEN, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_RTN_CODE
-NetSock_Listen(sock_id NET_SOCK_ID, sock_q_size NET_SOCK_Q_SIZE, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_RTN_CODE
-NetSock_Accept(sock_id NET_SOCK_ID, paddr_remote ptr[in, NET_SOCK_ADDR], paddr_len ptr[in, NET_SOCK_ADDR_LEN], p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_ID
-NetSock_RxDataFrom(sock_id NET_SOCK_ID, pdata_buf ptr[in, void], data_buf_len CPU_INT16U, flags NET_SOCK_API_FLAGS, paddr_remote ptr[in, NET_SOCK_ADDR], paddr_len ptr[in, NET_SOCK_ADDR_LEN], pip_opts_buf ptr[in, void], ip_opts_buf_len CPU_INT08U, pip_opts_len ptr[in, CPU_INT08U], p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_RTN_CODE
-NetSock_RxData(sock_id NET_SOCK_ID, pdata_buf ptr[in, void], data_buf_len CPU_INT16U, flags NET_SOCK_API_FLAGS, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_RTN_CODE
-NetSock_TxDataTo(sock_id NET_SOCK_ID, p_data ptr[in, void], data_len CPU_INT16U, flags NET_SOCK_API_FLAGS, paddr_remote ptr[in, NET_SOCK_ADDR], addr_len NET_SOCK_ADDR_LEN, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_RTN_CODE
-NetSock_TxData(sock_id NET_SOCK_ID, p_data ptr[in, void], data_len CPU_INT16U, flags NET_SOCK_API_FLAGS, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_RTN_CODE
-NetSock_Sel(sock_nbr_max NET_SOCK_QTY, psock_desc_rd ptr[in, NET_SOCK_DESC], psock_desc_wr ptr[in, NET_SOCK_DESC], ptimeout ptr[in, NET_SOCK_TIMEOUT], p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_RTN_CODE
-NetSock_SelAbort(sock_id NET_SOCK_ID, p_err ptr[out, const[NET_ERR_NONE, int16]])
-NetSock_IsConn(sock_id NET_SOCK_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgBlock(sock_id NET_SOCK_ID, block CPU_INT08U, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_BlockGet(sock_id NET_SOCK_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_INT08U
-NetSock_CfgSecure(sock_id NET_SOCK_ID, secure CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgSecureServerCertKeyInstall(sock_id NET_SOCK_ID, p_cert ptr[in, const[void]], cert_len CPU_INT32U, p_key ptr[in, const[void]], key_len CPU_INT32U, fmt NET_SOCK_SECURE_CERT_KEY_FMT, cert_chain CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgSecureClientCertKey(sock_id NET_SOCK_ID, p_cert ptr[in, const[void]], cert_size CPU_INT32U, p_key ptr[in, const[void]], key_size CPU_INT32U, fmt NET_SOCK_SECURE_CERT_KEY_FMT, cert_chain CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgSecureClientCommonName(sock_id NET_SOCK_ID, pcommon_name ptr[in, CPU_CHAR], p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgSecureClientTrustCallBack(sock_id NET_SOCK_ID, call_back_fnct NET_SOCK_SECURE_TRUST_FNCT, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgIF(sock_id NET_SOCK_ID, if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgRxQ_Size(sock_id NET_SOCK_ID, size NET_SOCK_DATA_SIZE, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgTxQ_Size(sock_id NET_SOCK_ID, size NET_SOCK_DATA_SIZE, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgConnChildQ_SizeSet(sock_id NET_SOCK_ID, queue_size NET_SOCK_Q_SIZE, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgConnChildQ_SizeGet(sock_id NET_SOCK_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_Q_SIZE
-NetSock_CfgTxNagle(sock_id NET_SOCK_ID, nagle_en CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgTxIP_TOS(sock_id NET_SOCK_ID, ip_tos NET_IPv4_TOS, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgTxIP_TTL(sock_id NET_SOCK_ID, ip_ttl NET_IPv4_TTL, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgTxIP_TTL_Multicast(sock_id NET_SOCK_ID, ip_ttl NET_IPv4_TTL, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgTimeoutRxQ_Dflt(sock_id NET_SOCK_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgTimeoutRxQ_Set(sock_id NET_SOCK_ID, timeout_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgTimeoutRxQ_Get_ms(sock_id NET_SOCK_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_INT32U
-NetSock_CfgTimeoutTxQ_Dflt(sock_id NET_SOCK_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgTimeoutTxQ_Set(sock_id NET_SOCK_ID, timeout_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgTimeoutTxQ_Get_ms(sock_id NET_SOCK_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_INT32U
-NetSock_CfgTimeoutConnReqDflt(sock_id NET_SOCK_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgTimeoutConnReqSet(sock_id NET_SOCK_ID, timeout_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgTimeoutConnReqGet_ms(sock_id NET_SOCK_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_INT32U
-NetSock_CfgTimeoutConnAcceptDflt(sock_id NET_SOCK_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgTimeoutConnAcceptSet(sock_id NET_SOCK_ID, timeout_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgTimeoutConnAcceptGet_ms(sock_id NET_SOCK_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_INT32U
-NetSock_CfgTimeoutConnCloseDflt(sock_id NET_SOCK_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgTimeoutConnCloseSet(sock_id NET_SOCK_ID, timeout_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetSock_CfgTimeoutConnCloseGet_ms(sock_id NET_SOCK_ID, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_INT32U
-NetSock_OptGet(sock_id NET_SOCK_ID, level NET_SOCK_PROTOCOL, opt_name NET_SOCK_OPT_NAME, popt_val ptr[in, void], popt_len ptr[in, NET_SOCK_OPT_LEN], p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_RTN_CODE
-NetSock_OptSet(sock_id NET_SOCK_ID, level NET_SOCK_PROTOCOL, opt_name NET_SOCK_OPT_NAME, popt_val ptr[in, const[void]], opt_len NET_SOCK_OPT_LEN, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_SOCK_RTN_CODE
-NetSock_PoolStatGet(void) NET_STAT_POOL
-NetSock_PoolStatResetMaxUsed(void)
-NetSock_GetLocalIPAddr(sock_id NET_SOCK_ID, p_buf_addr ptr[in, CPU_INT08U], p_family ptr[in, NET_SOCK_FAMILY], p_err ptr[out, const[NET_ERR_NONE, int16]])
+# net_sock.h
+NetSock_Open(protocol_family flags[net_sock_protocol_family_flags], sock_type flags[sock_type_flags], protocol flags[net_sock_protocol_flags], p_err ptr[out, const[NET_ERR_NONE, int16]]) net_sock_id_res
+NetSock_Close(sock_id net_sock_id_res, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_SOCK_RTN_CODE
+NetSock_Bind(sock_id net_sock_id_res, paddr_local ptr[in, NET_SOCK_ADDR], addr_len NET_SOCK_ADDR_LEN, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_SOCK_RTN_CODE
+NetSock_Conn(sock_id net_sock_id_res, paddr_remote ptr[in, NET_SOCK_ADDR], addr_len NET_SOCK_ADDR_LEN, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_SOCK_RTN_CODE
+NetSock_Listen(sock_id net_sock_id_res, sock_q_size NET_SOCK_Q_SIZE, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_SOCK_RTN_CODE
+NetSock_Accept(sock_id net_sock_id_res, paddr_remote ptr[in, NET_SOCK_ADDR], paddr_len ptr[in, NET_SOCK_ADDR_LEN], p_err ptr[out, const[NET_ERR_NONE, int16]]) net_sock_id_res
+NetSock_RxDataFrom(sock_id net_sock_id_res, pdata_buf ptr[in, void], data_buf_len CPU_INT16U, flags flags[sockex_flags], paddr_remote ptr[in, NET_SOCK_ADDR], paddr_len ptr[in, NET_SOCK_ADDR_LEN], pip_opts_buf ptr[in, void], ip_opts_buf_len CPU_INT08U, pip_opts_len ptr[in, CPU_INT08U], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_SOCK_RTN_CODE
+NetSock_RxData(sock_id net_sock_id_res, pdata_buf ptr[in, void], data_buf_len CPU_INT16U, flags flags[sockex_flags], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_SOCK_RTN_CODE
+NetSock_TxDataTo(sock_id net_sock_id_res, p_data ptr[in, void], data_len CPU_INT16U, flags flags[sockex_flags], paddr_remote ptr[in, NET_SOCK_ADDR], addr_len NET_SOCK_ADDR_LEN, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_SOCK_RTN_CODE
+NetSock_TxData(sock_id net_sock_id_res, p_data ptr[in, void], data_len CPU_INT16U, flags flags[sockex_flags], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_SOCK_RTN_CODE
+NetSock_Sel(sock_nbr_max NET_SOCK_QTY, psock_desc_rd ptr[in, NET_SOCK_DESC], psock_desc_wr ptr[in, NET_SOCK_DESC], ptimeout ptr[in, NET_SOCK_TIMEOUT], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_SOCK_RTN_CODE
+NetSock_SelAbort(sock_id net_sock_id_res, p_err ptr[out, const[NET_ERR_NONE, int16]])
+NetSock_IsConn(sock_id net_sock_id_res, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgBlock(sock_id net_sock_id_res, block CPU_INT08U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_BlockGet(sock_id net_sock_id_res, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_INT08U
+NetSock_CfgSecure(sock_id net_sock_id_res, secure CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgSecureServerCertKeyInstall(sock_id net_sock_id_res, p_cert ptr[in, void], cert_len CPU_INT32U, p_key ptr[in, void], key_len CPU_INT32U, fmt flags[net_sock_secure_cert_key_fmt_flags], cert_chain CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgSecureClientCertKey(sock_id net_sock_id_res, p_cert ptr[in, void], cert_size CPU_INT32U, p_key ptr[in, void], key_size CPU_INT32U, fmt flags[net_sock_secure_cert_key_fmt_flags], cert_chain CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgSecureClientCommonName(sock_id net_sock_id_res, pcommon_name ptr[in, CPU_CHAR], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+# NetSock_CfgSecureClientTrustCallBack(sock_id net_sock_id_res, call_back_fnct NET_SOCK_SECURE_TRUST_FNCT, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgIF(sock_id net_sock_id_res, if_nbr NET_IF_NBR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgRxQ_Size(sock_id net_sock_id_res, size NET_SOCK_DATA_SIZE, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgTxQ_Size(sock_id net_sock_id_res, size NET_SOCK_DATA_SIZE, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgConnChildQ_SizeSet(sock_id net_sock_id_res, queue_size NET_SOCK_Q_SIZE, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgConnChildQ_SizeGet(sock_id net_sock_id_res, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_SOCK_Q_SIZE
+NetSock_CfgTxNagle(sock_id net_sock_id_res, nagle_en CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgTxIP_TOS(sock_id net_sock_id_res, ip_tos NET_IPv4_TOS, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgTxIP_TTL(sock_id net_sock_id_res, ip_ttl NET_IPv4_TTL, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgTxIP_TTL_Multicast(sock_id net_sock_id_res, ip_ttl NET_IPv4_TTL, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgTimeoutRxQ_Dflt(sock_id net_sock_id_res, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgTimeoutRxQ_Set(sock_id net_sock_id_res, timeout_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgTimeoutRxQ_Get_ms(sock_id net_sock_id_res, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_INT32U
+NetSock_CfgTimeoutTxQ_Dflt(sock_id net_sock_id_res, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgTimeoutTxQ_Set(sock_id net_sock_id_res, timeout_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgTimeoutTxQ_Get_ms(sock_id net_sock_id_res, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_INT32U
+NetSock_CfgTimeoutConnReqDflt(sock_id net_sock_id_res, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgTimeoutConnReqSet(sock_id net_sock_id_res, timeout_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgTimeoutConnReqGet_ms(sock_id net_sock_id_res, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_INT32U
+NetSock_CfgTimeoutConnAcceptDflt(sock_id net_sock_id_res, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgTimeoutConnAcceptSet(sock_id net_sock_id_res, timeout_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgTimeoutConnAcceptGet_ms(sock_id net_sock_id_res, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_INT32U
+NetSock_CfgTimeoutConnCloseDflt(sock_id net_sock_id_res, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgTimeoutConnCloseSet(sock_id net_sock_id_res, timeout_ms CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetSock_CfgTimeoutConnCloseGet_ms(sock_id net_sock_id_res, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_INT32U
+NetSock_OptGet(sock_id net_sock_id_res, level flags[net_sock_protocol_flags], opt_name flags[net_sock_opt_name_flags], popt_val ptr[in, void], popt_len ptr[in, NET_SOCK_OPT_LEN], p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_SOCK_RTN_CODE
+NetSock_OptSet(sock_id net_sock_id_res, level flags[net_sock_protocol_flags], opt_name flags[net_sock_opt_name_flags], popt_val ptr[in, void], opt_len NET_SOCK_OPT_LEN, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_SOCK_RTN_CODE
+NetSock_PoolStatGet() (ignore_return)
+# NET_STAT_POOL
+NetSock_PoolStatResetMaxUsed()
+NetSock_GetLocalIPAddr(sock_id net_sock_id_res, p_buf_addr ptr[in, CPU_INT08U], p_family ptr[in, flags[net_sock_family_flags, int16]], p_err ptr[out, const[NET_ERR_NONE, int16]])
+
+type NET_SOCK_DATA_SIZE int32
+type NET_IPv4_TOS int8
+type NET_IPv4_TTL int8
+type NET_SOCK_QTY int16
+type NET_SOCK_OPT_LEN int32
+type CPU_DATA int32
+
+net_sock_opt_name_flags = NET_SOCK_OPT_SOCK_TX_BUF_SIZE, NET_SOCK_OPT_SOCK_RX_BUF_SIZE, NET_SOCK_OPT_SOCK_RX_TIMEOUT, NET_SOCK_OPT_SOCK_TX_TIMEOUT, NET_SOCK_OPT_SOCK_ERROR, NET_SOCK_OPT_SOCK_TYPE, NET_SOCK_OPT_SOCK_KEEP_ALIVE, NET_SOCK_OPT_SOCK_ACCEPT_CONN, NET_SOCK_OPT_TCP_NO_DELAY, NET_SOCK_OPT_TCP_KEEP_CNT, NET_SOCK_OPT_TCP_KEEP_IDLE, NET_SOCK_OPT_TCP_KEEP_INTVL, NET_SOCK_OPT_IP_TOS, NET_SOCK_OPT_IP_TTL, NET_SOCK_OPT_IP_RX_IF, NET_SOCK_OPT_IP_OPT, NET_SOCK_OPT_IP_HDR_INCL, NET_SOCK_OPT_IP_ADD_MEMBERSHIP, NET_SOCK_OPT_IP_DROP_MEMBERSHIP
+net_sock_family_flags = NET_SOCK_FAMILY_IP_V4, NET_SOCK_FAMILY_IP_V6
+
+NET_SOCK_DESC {
+	SockID_DescNbrSet	array[CPU_DATA, NET_SOCK_DESC_ARRAY_SIZE]
+}
+
+NET_SOCK_TIMEOUT {
+	timeout_sec	CPU_INT32S
+	timeout_us	CPU_INT32S
+}
 
 # net_tcp.h
-NetTCP_ConnCfgIdleTimeout(conn_id_tcp NET_TCP_CONN_ID, timeout_sec NET_TCP_TIMEOUT_SEC, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetTCP_ConnCfgMaxSegSizeLocal(conn_id_tcp NET_TCP_CONN_ID, max_seg_size NET_TCP_SEG_SIZE, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetTCP_ConnCfgRxWinSize(conn_id_tcp NET_TCP_CONN_ID, win_size NET_TCP_WIN_SIZE, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetTCP_ConnCfgTxWinSize(conn_id_tcp NET_TCP_CONN_ID, win_size NET_TCP_WIN_SIZE, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetTCP_ConnCfgTxNagleEn(conn_id_tcp NET_TCP_CONN_ID, nagle_en CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetTCP_ConnCfgTxAckImmedRxdPushEn(conn_id_tcp NET_TCP_CONN_ID, tx_immed_ack_en CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetTCP_ConnCfgTxAckDlyTimeout(conn_id_tcp NET_TCP_CONN_ID, timeout_ms NET_TCP_TIMEOUT_MS, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetTCP_ConnCfgTxKeepAliveEn(conn_id_tcp NET_TCP_CONN_ID, keep_alive_en CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetTCP_ConnCfgTxKeepAliveTh(conn_id_tcp NET_TCP_CONN_ID, nbr_max_keep_alive NET_PKT_CTR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetTCP_ConnCfgReTxMaxTh(conn_id_tcp NET_TCP_CONN_ID, nbr_max_re_tx NET_PKT_CTR, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetTCP_ConnCfgReTxMaxTimeout(conn_id_tcp NET_TCP_CONN_ID, timeout_sec NET_TCP_TIMEOUT_SEC, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetTCP_ConnCfgMSL_Timeout(conn_id_tcp NET_TCP_CONN_ID, msl_timeout_sec NET_TCP_TIMEOUT_SEC, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetTCP_ConnPoolStatGet(void) NET_STAT_POOL
-NetTCP_ConnPoolStatResetMaxUsed(void)
-NetTCP_ConnStateGet(conn_id NET_TCP_CONN_ID) NET_TCP_CONN_STATE
+NetTCP_ConnCfgIdleTimeout(conn_id_tcp NET_TCP_CONN_ID, timeout_sec NET_TCP_TIMEOUT_SEC, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetTCP_ConnCfgMaxSegSizeLocal(conn_id_tcp NET_TCP_CONN_ID, max_seg_size NET_TCP_SEG_SIZE, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetTCP_ConnCfgRxWinSize(conn_id_tcp NET_TCP_CONN_ID, win_size NET_TCP_WIN_SIZE, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetTCP_ConnCfgTxWinSize(conn_id_tcp NET_TCP_CONN_ID, win_size NET_TCP_WIN_SIZE, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetTCP_ConnCfgTxNagleEn(conn_id_tcp NET_TCP_CONN_ID, nagle_en CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetTCP_ConnCfgTxAckImmedRxdPushEn(conn_id_tcp NET_TCP_CONN_ID, tx_immed_ack_en CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetTCP_ConnCfgTxAckDlyTimeout(conn_id_tcp NET_TCP_CONN_ID, timeout_ms NET_TCP_TIMEOUT_MS, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetTCP_ConnCfgTxKeepAliveEn(conn_id_tcp NET_TCP_CONN_ID, keep_alive_en CPU_BOOLEAN, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetTCP_ConnCfgTxKeepAliveTh(conn_id_tcp NET_TCP_CONN_ID, nbr_max_keep_alive NET_PKT_CTR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetTCP_ConnCfgReTxMaxTh(conn_id_tcp NET_TCP_CONN_ID, nbr_max_re_tx NET_PKT_CTR, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetTCP_ConnCfgReTxMaxTimeout(conn_id_tcp NET_TCP_CONN_ID, timeout_sec NET_TCP_TIMEOUT_SEC, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetTCP_ConnCfgMSL_Timeout(conn_id_tcp NET_TCP_CONN_ID, msl_timeout_sec NET_TCP_TIMEOUT_SEC, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetTCP_ConnPoolStatGet() (ignore_return)
+# NET_STAT_POOL
+NetTCP_ConnPoolStatResetMaxUsed()
+NetTCP_ConnStateGet(conn_id NET_TCP_CONN_ID) (ignore_return)
+# NET_TCP_CONN_STATE
+
+type NET_TCP_CONN_ID int16
+type NET_TCP_TIMEOUT_SEC int16
+type NET_TCP_SEG_SIZE int16
+type NET_TCP_WIN_SIZE int16
+type NET_PKT_CTR int16
+type NET_TCP_TIMEOUT_MS int32
 
 # net_util.h
-NetUtil_16BitOnesCplChkSumHdrCalc(phdr ptr[in, void], hdr_size CPU_INT16U, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_CHK_SUM
-NetUtil_16BitOnesCplChkSumHdrVerify(phdr ptr[in, void], hdr_size CPU_INT16U, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetUtil_16BitOnesCplChkSumDataCalc(pdata_buf ptr[in, void], ppseudo_hdr ptr[in, void], pseudo_hdr_size CPU_INT16U, p_err ptr[out, const[NET_ERR_NONE, int16]]) NET_CHK_SUM
-NetUtil_16BitOnesCplChkSumDataVerify(pdata_buf ptr[in, void], ppseudo_hdr ptr[in, void], pseudo_hdr_size CPU_INT16U, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_BOOLEAN
-NetUtil_32BitCRC_Calc(p_data ptr[in, CPU_INT08U], data_len CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_INT32U
-NetUtil_32BitCRC_CalcCpl(p_data ptr[in, CPU_INT08U], data_len CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) CPU_INT32U
-NetUtil_32BitReflect(val CPU_INT32U) CPU_INT32U
-NetUtil_TimeSec_uS_To_ms(time_sec CPU_INT32U, time_us CPU_INT32U) CPU_INT32U
-NetUtil_TS_Get(void) NET_TS
-NetUtil_TS_Get_ms(void) NET_TS_MS
-NetUtil_InitSeqNbrGet(void) CPU_INT32U
-NetUtil_RandomRangeGet(min CPU_INT32U, max CPU_INT32U) CPU_INT32U
+NetUtil_16BitOnesCplChkSumHdrCalc(phdr ptr[in, void], hdr_size CPU_INT16U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_CHK_SUM
+NetUtil_16BitOnesCplChkSumHdrVerify(phdr ptr[in, void], hdr_size CPU_INT16U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetUtil_16BitOnesCplChkSumDataCalc(pdata_buf ptr[in, void], ppseudo_hdr ptr[in, void], pseudo_hdr_size CPU_INT16U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# NET_CHK_SUM
+NetUtil_16BitOnesCplChkSumDataVerify(pdata_buf ptr[in, void], ppseudo_hdr ptr[in, void], pseudo_hdr_size CPU_INT16U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_BOOLEAN
+NetUtil_32BitCRC_Calc(p_data ptr[in, CPU_INT08U], data_len CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_INT32U
+NetUtil_32BitCRC_CalcCpl(p_data ptr[in, CPU_INT08U], data_len CPU_INT32U, p_err ptr[out, const[NET_ERR_NONE, int16]]) (ignore_return)
+# CPU_INT32U
+NetUtil_32BitReflect(val CPU_INT32U) (ignore_return)
+# CPU_INT32U
+NetUtil_TimeSec_uS_To_ms(time_sec CPU_INT32U, time_us CPU_INT32U) (ignore_return)
+# CPU_INT32U
+NetUtil_TS_Get() (ignore_return)
+# NET_TS
+NetUtil_TS_Get_ms() (ignore_return)
+# NET_TS_MS
+NetUtil_InitSeqNbrGet() (ignore_return)
+# CPU_INT32U
+NetUtil_RandomRangeGet(min CPU_INT32U, max CPU_INT32U) (ignore_return)
+# CPU_INT32U
 
 # net_bsd.h
 NetBSD_Init(p_err ptr[out, const[NET_ERR_NONE, int16]])
-socket(protocol_family int, sock_type int, protocol int) int
-close(sock_id int) int
-shutdown(sock_id int, type int) int
-bind(sock_id int, p_addr_local ptr[in, sockaddr], addr_len socklen_t) int
-connect(sock_id int, p_addr_remote ptr[in, sockaddr], addr_len socklen_t) int
-listen(sock_id int, sock_q_size int) int
-accept(sock_id int, p_addr_remote ptr[in, sockaddr], p_addr_len ptr[in, socklen_t]) int
-recvfrom(sock_id int, p_data_buf ptr[in, void], data_buf_len _size_t, flags int, p_addr_remote ptr[in, sockaddr], p_addr_len ptr[in, socklen_t]) ssize_t
-recv(sock_id int, p_data_buf ptr[in, void], data_buf_len _size_t, flags int) ssize_t
-sendto(sock_id int, p_data ptr[in, void], data_len _size_t, flags int, p_addr_remote ptr[in, sockaddr], addr_len socklen_t) ssize_t
-send(sock_id int, p_data ptr[in, void], data_len _size_t, flags int) ssize_t
-select(desc_nbr_max int, p_desc_rd ptr[in, fd_set], p_desc_wr ptr[in, fd_set], p_timeout ptr[in, timeval]) int
-inet_addr(p_addr ptr[in, char]) in_addr_t
-getpeername(sock_id int, addr ptr[in, sockaddr], addrlen ptr[in, socklen_t]) int
-getsockname(sock_id int, addr ptr[in, sockaddr], addrlen ptr[in, socklen_t]) int
-getnameinfo(p_sockaddr ptr[in, const[sockaddr]], addrlen int, p_host_name ptr[in, char], hostlen int, p_service_name ptr[in, char], servicelen int, flags int) int
-gai_strerro(errcode int) ptr[out, const[char]]
-getaddrinfo(p_node_name ptr[in, const[char]], p_service_name ptr[in, const[char]], p_hints ptr[in, const[addrinfo]], *pp_res ptr[in, addrinfo]) int
+socket(protocol_family int16, sock_type flags[sock_type_flags], protocol flags[protocol_flags]) net_sock_id_res
+close(sock_id net_sock_id_res) (ignore_return)
+shutdown(sock_id net_sock_id_res, shutdown_type flags[shutdown_type_flags]) (ignore_return)
+bind(sock_id net_sock_id_res, p_addr_local ptr[in, sockaddr], addr_len socklen_t) (ignore_return)
+connect(sock_id net_sock_id_res, p_addr_remote ptr[in, sockaddr], addr_len socklen_t) (ignore_return)
+listen(sock_id net_sock_id_res, sock_q_size int16) (ignore_return)
+accept(sock_id net_sock_id_res, p_addr_remote ptr[in, sockaddr], p_addr_len ptr[in, socklen_t]) net_sock_id_res
+recvfrom(sock_id net_sock_id_res, p_data_buf ptr[in, void], data_buf_len _size_t, flags flags[recv_flags], p_addr_remote ptr[in, sockaddr], p_addr_len ptr[in, socklen_t]) (ignore_return)
+# ssize_t
+recv(sock_id net_sock_id_res, p_data_buf ptr[in, void], data_buf_len _size_t, flags flags[recv_flags]) (ignore_return)
+# ssize_t
+sendto(sock_id net_sock_id_res, p_data ptr[in, void], data_len _size_t, flags flags[send_flags], p_addr_remote ptr[in, sockaddr], addr_len socklen_t) (ignore_return)
+# ssize_t
+send(sock_id net_sock_id_res, p_data ptr[in, void], data_len _size_t, flags flags[send_flags]) (ignore_return)
+# ssize_t
+select(desc_nbr_max int16, p_desc_rd ptr[in, fd_set], p_desc_wr ptr[in, fd_set], p_timeout ptr[in, timeval]) (ignore_return)
+# int16
+inet_addr(p_addr ptr[in, char]) (ignore_return)
+# in_addr_t
+getpeername(sock_id net_sock_id_res, addr ptr[in, sockaddr], addrlen ptr[in, socklen_t]) (ignore_return)
+# int16
+getsockname(sock_id net_sock_id_res, addr ptr[in, sockaddr], addrlen ptr[in, socklen_t]) (ignore_return)
+# int16
+getnameinfo(p_sockaddr ptr[in, sockaddr], addrlen int16, p_host_name ptr[in, char], hostlen int16, p_service_name ptr[in, char], servicelen int16, flags flags[get_name_info_flags]) (ignore_return)
+# int16
+gai_strerro(errcode int16) (ignore_return)
+# ptr[out, char]
+getaddrinfo(p_node_name ptr[in, char], p_service_name ptr[in, char], p_hints ptr[in, addrinfo], pp_res ptr[in, ptr[in, addrinfo]]) (ignore_return)
+# int16
 freeaddrinfo(res ptr[in, addrinfo])
-inet_ntoa(addr in_addr) ptr[out, char]
-inet_aton(p_addr_in ptr[in, char], p_addr ptr[in, in_addr]) int
-inet_pton(af int, src ptr[in, const[char]], dst ptr[in, void]) int
-inet_ntop(af int, src ptr[in, const[void]], dst ptr[in, char], size socklen_t) ptr[out, const[char]]
-setsockopt(sock_id int, protocol int, opt_name int, opt_val ptr[in, void], opt_len socklen_t) int
-getsockopt(sock_id int, protocol int, opt_name int, p_opt_val ptr[in, void], p_opt_len ptr[in, socklen_t]) int
-gethostname(host_name ptr[in, char], name_len _size_t) int
-sethostname(host_name ptr[in, const[char]], name_len _size_t) int
+# inet_ntoa(addr in_addr) (ignore_return)
+# ptr[out, char]
+inet_aton(p_addr_in ptr[in, char], p_addr ptr[in, in_addr]) (ignore_return)
+# int16
+inet_pton(af int16, src ptr[in, char], dst ptr[in, void]) (ignore_return)
+# int16
+inet_ntop(af int16, src ptr[in, void], dst ptr[in, char], size socklen_t) (ignore_return)
+# ptr[out, char]
+setsockopt(sock_id net_sock_id_res, protocol int16, opt_name int16, opt_val ptr[in, void], opt_len socklen_t) (ignore_return)
+# int16
+getsockopt(sock_id net_sock_id_res, protocol int16, opt_name int16, p_opt_val ptr[in, void], p_opt_len ptr[in, socklen_t]) (ignore_return)
+# int16
+gethostname(host_name ptr[in, char], name_len _size_t) (ignore_return)
+# int16
+sethostname(host_name ptr[in, char], name_len _size_t) (ignore_return)
+# int16
+
+type sa_family_t int16
+type socklen_t int32
+type _size_t int32
+type _time_t int32
+type suseconds_t int32
+type char int8
+type in_addr_t int32
+
+sock_type_flags = 0, PF_INET, PF_INET6
+protocol_flags = 0, SOCK_DGRAM, SOCK_STREAM
+shutdown_type_flags = SHUT_RD, SHUT_WR, SHUT_RDWR
+recv_flags = 0, MSG_PEEK, MSG_DONTWAIT
+send_flags = 0, MSG_DONTWAIT
+get_name_info_flags = NI_NAMEREQD, NI_DGRAM, NI_NOFQDN, NI_NUMERICHOST, NI_NUMERICSERV
+
+sockaddr {
+	sa_family	sa_family_t
+	sa_data		array[CPU_CHAR, NET_BSD_ADDR_LEN_MAX]
+}
+
+fd_set {
+	fds_bits	array[CPU_DATA, FD_ARRAY_SIZE]
+}
+
+timeval {
+	tv_sec	_time_t
+	tv_usec	suseconds_t
+}
+
+in_addr {
+	s_addr	in_addr_t
+}
+
+# need to be wrapped
+addrinfo {
+	ai_flags	int32
+	ai_family	int32
+	ai_socktype	int32
+	ai_protocol	int32
+	ai_addrlen	socklen_t
+	ai_addr		ptr[in, sockaddr]
+	ai_canonname	ptr[in, int8]
+# ai_next			ptr[in, addrinfo] # fix
+}
 
 # Modules/Commom/net_base64.h
 # NetBase64_Encode(pin_buf ptr[in, CPU_CHAR], in_len CPU_INT16U, pout_buf ptr[in, CPU_CHAR], out_len CPU_INT16U, p_err ptr[out, const[NET_ERR_NONE, int16]])
 # NetBase64_Decode(pin_buf ptr[in, CPU_CHAR], in_len CPU_INT16U, pout_buf ptr[in, CPU_CHAR], out_len CPU_INT16U, p_err ptr[out, const[NET_ERR_NONE, int16]])
 
 # Modules/Commom/net_sha1.h
-# NetSHA1_Reset(p_ctx ptr[in, NET_SHA1_CTX]) CPU_BOOLEAN
-# NetSHA1_Input(p_ctx ptr[in, NET_SHA1_CTX], p_msg ptr[in, const[CPU_CHAR]], len CPU_INT32U) CPU_BOOLEAN
-# NetSHA1_Result(p_ctx ptr[in, NET_SHA1_CTX], p_msg_digest ptr[in, CPU_CHAR]) CPU_BOOLEAN
+# NetSHA1_Reset(p_ctx ptr[in, NET_SHA1_CTX]) (ignore_return)
+# CPU_BOOLEAN
+# NetSHA1_Input(p_ctx ptr[in, NET_SHA1_CTX], p_msg ptr[in, const[CPU_CHAR]], len CPU_INT32U) (ignore_return)
+# CPU_BOOLEAN
+# NetSHA1_Result(p_ctx ptr[in, NET_SHA1_CTX], p_msg_digest ptr[in, CPU_CHAR]) (ignore_return)
+# CPU_BOOLEAN
 
 # can't find Wireless Device BSP Functions and Ethernet Device BSP Functions'
 
 # static method in Dev/Ether/MACNet/net_dev_macnet.c
-NetDev_Init(pif ptr[in, NET_IF])
+NetDev_Init(pif ptr[out, NET_IF])
 NetDev_Start(pif ptr[in, NET_IF])
 NetDev_Stop(pif ptr[in, NET_IF])
-NetDev_Rx(pif ptr[in, NET_IF], *p_data ptr[in, CPU_INT08U], size ptr[in, CPU_INT16U])
+NetDev_Rx(pif ptr[in, NET_IF], p_data ptr[in, ptr[in, CPU_INT08U]], size ptr[in, CPU_INT16U])
 NetDev_Tx(pif ptr[in, NET_IF], p_data ptr[in, CPU_INT08U], size CPU_INT16U)
 NetDev_AddrMulticastAdd(pif ptr[in, NET_IF], paddr_hw ptr[in, CPU_INT08U], addr_hw_len CPU_INT08U)
 NetDev_AddrMulticastRemove(pif ptr[in, NET_IF], paddr_hw ptr[in, CPU_INT08U], addr_hw_len CPU_INT08U)
-NetDev_ISR_Handler(pif ptr[in, NET_IF], type NET_DEV_ISR_TYPE)
+NetDev_ISR_Handler(pif ptr[in, NET_IF], type flags[net_dev_isr_type_flags])
 NetDev_IO_Ctrl(pif ptr[in, NET_IF], opt CPU_INT08U, p_data ptr[in, void])
 NetDev_MII_Rd(pif ptr[in, NET_IF], phy_addr CPU_INT08U, reg_addr CPU_INT08U, p_data ptr[in, CPU_INT16U])
 NetDev_MII_Wr(pif ptr[in, NET_IF], phy_addr CPU_INT08U, reg_addr CPU_INT08U, data CPU_INT16U)
@@ -360,18 +649,28 @@ NetDev_RxDescPtrCurInc(pif ptr[in, NET_IF])
 NetDev_TxDescInit(pif ptr[in, NET_IF])
 
 # static method inDev/Ether/PHY/Generic/net_phy.c
-NetPhy_Init(pif ptr[in, NET_IF])
+NetPhy_Init(pif ptr[out, NET_IF])
 NetPhy_EnDis(pif ptr[in, NET_IF], en CPU_BOOLEAN)
 NetPhy_LinkStateGet(pif ptr[in, NET_IF], plink_state ptr[in, NET_DEV_LINK_ETHER])
 NetPhy_LinkStateSet(pif ptr[in, NET_IF], plink_state ptr[in, NET_DEV_LINK_ETHER])
 NetPhy_AutoNegStart(pif ptr[in, NET_IF])
 NetPhy_AddrProbe(pif ptr[in, NET_IF])
 
+# net_dev_isr_type_flags = NET_DEV_ISR_TYPE_NONE,NET_DEV_ISR_TYPE_UNKNOWN,NET_DEV_ISR_TYPE_RX,NET_DEV_ISR_TYPE_RX_RUNT,NET_DEV_ISR_TYPE_RX_OVERRUN,NET_DEV_ISR_TYPE_TX_RDY,NET_DEV_ISR_TYPE_TX_COMPLETE,NET_DEV_ISR_TYPE_TX_COLLISION_LATE,NET_DEV_ISR_TYPE_TX_COLLISION_EXCESS,NET_DEV_ISR_TYPE_JABBER,NET_DEV_ISR_TYPE_BABBLE,NET_DEV_ISR_TYPE_PHY,NET_DEV_ISR_TYPE_TX_DONE
+net_if_type_flags = NET_IF_TYPE_NONE, NET_IF_TYPE_LOOPBACK, NET_IF_TYPE_SERIAL, NET_IF_TYPE_PPP, NET_IF_TYPE_ETHER, NET_IF_TYPE_WIFI
+net_if_link_sate_flags = NET_IF_LINK_UP, NET_IF_LINK_DOWN
 
-NET_TASK_CFG {
-
+NET_DEV_LINK_ETHER {
+	Spd	CPU_INT16U
+	Duplex	CPU_INT08U
 }
 
-
-
-
+# wrong!!! need to be fixed
+NET_IF {
+	Type		flags[net_if_type_flags, int16]
+	Nbr		NET_IF_NBR
+	Init		CPU_BOOLEAN
+	En		CPU_BOOLEAN
+	LinkPrev	flags[net_if_link_sate_flags, int16]
+	Link		flags[net_if_link_sate_flags, int16]
+}
