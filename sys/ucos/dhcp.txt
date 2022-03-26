@@ -1,6 +1,6 @@
 include <Source/dhcp-c.h>
 
-DHCPc_Init() (ignore_return)
+# DHCPc_Init() (ignore_return)
 # DHCPc_ERR
 DHCPc_Start(if_nbr NET_IF_NBR, preq_param_tbl ptr[in, DHCPc_OPT_CODE], req_param_tbl_qty CPU_INT08U, perr ptr[out, const[DHCPc_ERR_NONE, int16]])
 DHCPc_Stop(if_nbr NET_IF_NBR, perr ptr[out, const[DHCPc_ERR_NONE, int16]])

@@ -6,7 +6,7 @@ OSMemCreate(p_mem ptr[out, os_mem_res], p_name ptr[in, CPU_CHAR], p_addr ptr[in,
 OSMemGet(p_mem ptr[in, os_mem_res], p_err ptr[out, const[OS_ERR_NONE, int16]]) os_mem_ptr_res
 OSMemPut(p_mem ptr[in, os_mem_res], p_blk os_mem_ptr_res, p_err ptr[out, const[OS_ERR_NONE, int16]])
 
-type OS_MEM_QTY int16
+type OS_MEM_QTY int16[2:100]
 type OS_MEM_SIZE int16
 
 resource os_mem_res[intptr]
